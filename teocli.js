@@ -1,9 +1,8 @@
-/*
+/* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 
 /**
  * Teonet client class
@@ -12,33 +11,8 @@
  * @constructor
  */
 function Teocli(ws) {
-    //var teocli = this;
-    //console.log("Teocli:", teocli);
 
-//    if(typeof ws.onopen === 'function') teocli.old_onopen = ws.onopen;
-//    if(typeof ws.onerror === 'function') teocli.old_onerror = ws.onerror;
-//    if(typeof ws.onclose === 'function') teocli.old_onclose = ws.onclose;
-//    if(typeof ws.onmessage === 'function') teocli.old_onmessage = ws.onmessage;
-//
-//    ws.onopen = function(ev)  {
-//        console.log("ws.onopen");
-//        teocli.onopen(ev);
-//        if(teocli.onopen) teocli.onopen(ev);
-//        if(teocli.old_onopen) teocli.old_onopen(ev);
-//    };
-//    ws.onerror = function(ev) {
-//        if(teocli.onerror) teocli.onerror(ev);
-//        if(teocli.old_onerror) teocli.old_onerror(ev);
-//    };
-//    ws.onclose = function(ev) {
-//        if(teocli.onclose) teocli.onclose(ev);
-//        if(teocli.old_onclose) teocli.old_onclose(ev); };
-//    ws.onmessage = function(ev) {
-//        if(teocli.onmessage) teocli.onmessage(ev);
-//        if(teocli.old_onmessage) teocli.old_onmessage(ev);
-//    };
-
-    teocli = this;
+    var teocli = this;
     teocli.ws = ws;
 
     teocli.ws.onopen = function (ev) {
@@ -155,7 +129,7 @@ Teocli.prototype.process = function (data) {
 
     var processed = 0;
 
-    teocli = this;
+    var teocli = this;
 
     // Parse JSON command
     var p = teocli.IsJsonString(data);
@@ -218,19 +192,7 @@ Teocli.prototype.process = function (data) {
     return processed;
 };
 
-//      /**
-//       * Set received data callback
-//       *
-//       * @param {type} type echo, peers or other
-//       * @param {type} callback Callback function
-//       *
-//       * @returns {undefined}
-//       */
-//      setCallback: function(type, callback) {
-//          this[type + '_callback'] = callback;
-//      }
-
-
+// Check NodeJS module exists
 if(typeof module !== 'undefined' && module.exports) {
     module.exports = Teocli;
 }
