@@ -235,4 +235,6 @@ function Teocli(ws) {
     };
 };
 
-module.exports = Teocli;
+if (module && module.exports) {
+    module.exports = Teocli;
+}
