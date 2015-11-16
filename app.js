@@ -9,9 +9,9 @@ var Teocli = require('./teocli');
  * @param {type} data
  * @returns {undefined}
  */
-function echo_func (err, data) {
+function echo_func(err, data) {
 
-    console.log("echo_func, triptime: " + data.data.time + " ms" , data);
+    console.log("echo_func, triptime: " + data.data.time + " ms", data);
 }
 
 /**
@@ -21,7 +21,7 @@ function echo_func (err, data) {
  * @param {type} data
  * @returns {undefined}
  */
-function peers_func (err, data) {
+function peers_func(err, data) {
 
     console.log("peers_func", data);
 }
@@ -33,9 +33,9 @@ function peers_func (err, data) {
  * @param {type} data
  * @returns {undefined}
  */
-function other_func (err, data) {
+function other_func(err, data) {
 
-    console.log("other_func" , data);
+    console.log("other_func", data);
 }
 
 /**
@@ -89,7 +89,7 @@ function message_func(ev) {
     //console.log('onmessage', ev.data);
 
     // Process command. If command not processed show it in html page
-    if(!teocli.process(ev.data)) {
+    if (!teocli.process(ev.data)) {
 
         console.log(ev.data);
 
@@ -100,14 +100,13 @@ function message_func(ev) {
 }
 
 
-
 // Connect to websocket server
 //var ws = new WebSocket('ws://' + location.host + '/ws');
 var ws = new WebSocket('ws://10.12.35.53:8080/ws');
 
 // Create Teocli object
-var teocli = Teocli(ws);
-teocli.init();
+var teocli = new Teocli(ws);
+
 
 // Define received data callbacks
 teocli.onecho = echo_func; // Calls when echo_answer received
@@ -120,9 +119,8 @@ teocli.onmessage = message_func; // Calls when websocket message received
 teocli.onerror = error_func; // Calls when websocket error hapend
 
 
-
 // input from console
 var stdin = process.openStdin();
-stdin.addListener("data", function(d) {
+stdin.addListener("data", function (d) {
     ws.send(d.toString().trim());
 });
