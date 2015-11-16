@@ -49,7 +49,7 @@ function open_func(ev) {
     // Client name (random created)
     teocli.client_name = "ws-" + Math.floor((Math.random() * 100) + 1);
 
-    console.log('onopen', teocli.client_name, ev);
+    console.log('onopen', teocli.client_name);
 
     teocli.login(teocli.client_name); // Send login command to L0 server
     teocli.peers("ps-server"); // Send peers list request command to "ps-server" peer
@@ -64,7 +64,7 @@ function open_func(ev) {
  */
 function error_func(ev) {
 
-    console.log('onerror', ev);
+    console.log('onerror');
 }
 
 /**
@@ -75,7 +75,7 @@ function error_func(ev) {
  */
 function close_func(ev) {
 
-    console.log('onclose', ev);
+    console.log('onclose');
 }
 
 /**
@@ -86,15 +86,17 @@ function close_func(ev) {
  */
 function message_func(ev) {
 
-    console.log('onmessage', ev, ev.data.slice(0,20));
+    //console.log('onmessage', ev.data);
 
-    //// Process command. If command not processed show it in html page
-    //if(!teocli.process(ev.data)) {
-    //
-    //    var div = document.createElement('div');
-    //    div.innerHTML = ev.data;
-    //    document.getElementById('messages').appendChild(div);
-    //}
+    // Process command. If command not processed show it in html page
+    if(!teocli.process(ev.data)) {
+
+        console.log(ev.data);
+
+        //var div = document.createElement('div');
+        //div.innerHTML = ev.data;
+        //document.getElementById('messages').appendChild(div);
+    }
 }
 
 
@@ -116,3 +118,11 @@ teocli.onopen = open_func; // Calls when client connected to websocket
 teocli.onclose = close_func; // Calls when client connected to websocket
 teocli.onmessage = message_func; // Calls when websocket message received
 teocli.onerror = error_func; // Calls when websocket error hapend
+
+
+
+// input from console
+var stdin = process.openStdin();
+stdin.addListener("data", function(d) {
+    ws.send(d.toString().trim());
+});
