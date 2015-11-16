@@ -231,6 +231,6 @@ Teocli.prototype.process = function (data) {
 //      }
 
 
-if (module && module.exports) {
+if(typeof module !== 'undefined' && module.exports) {
     module.exports = Teocli;
 }
