@@ -101,7 +101,7 @@ function message_func(ev) {
 
 // Connect to websocket server
 //var ws = new WebSocket('ws://' + location.host + '/ws');
-var ws = new WebSocket('ws://10.12.35.53/ws');
+var ws = new WebSocket('ws://10.12.35.53:8080/ws');
 
 // Create Teocli object
 var teocli = Teocli(ws);
