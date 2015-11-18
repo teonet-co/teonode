@@ -72,7 +72,9 @@ Teocli.prototype.echo = function (to, msg) {
 
     var d = new Date();
     var n = d.getTime();
-    this.ws.send('{ "cmd": 65, "to": "' + to + '", "data": { "msg": "' + msg + '", "time": ' + n + ' } }');
+    var msg_is_obj = this.IsJsonString(msg) ? "" : '"';
+    this.ws.send('{ "cmd": 65, "to": "' + to + '", "data": { "msg": ' + 
+            msg_is_obj + msg + msg_is_obj + ', "time": ' + n + ' } }');
 };
 
 /**
