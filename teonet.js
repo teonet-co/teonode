@@ -29,12 +29,25 @@ var StringArray = ArrayType('string');
 
 
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
-module.exports = ffi.Library('./lib/libteonet', {
-  'teoGetLibteonetVersion': [ 'string', [ ] ],
-  'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
-  'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
-  'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ]
-});
+module.exports =  { 
+    
+   lib: ffi.Library('libteonet', {
+    'teoGetLibteonetVersion': [ 'string', [ ] ],
+    'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
+    'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
+    'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ],
+    'teoSetAppType': [ 'void' , [ 'pointer', 'string' ] ]
+    }), 
+  
+    eventCbPtr: function(eventCb) {
+      return ffi.Callback('void', ['pointer', 'int', 'pointer', 'int', 'pointer'], eventCb);
+    },
+    
+    ksnetEvMgrInit: function(eventCb) {
+        return this.lib.ksnetEvMgrInit(process.argv.length-1, Array.from(process.argv).slice(1), this.eventCbPtr(eventCb), 3);
+    }
+  };
+
 
 // ksnetEvMgrSetCustomTimer(ke, 2.00);
 

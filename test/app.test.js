@@ -1,7 +1,7 @@
 /* 
  * The MIT License
  *
- * Copyright 2016 kirill.
+ * Copyright 2016 Kirill Scherba <kirill@scherba.ru>.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,31 +23,31 @@
  */
 
 // Declare Teonet
-var libteonet = require('../teonet');
+var teonet = require('../teonet');
 var should = require('should'); // http://shouldjs.github.io/
 
-// teoGetLibteonetVersion
+// Test function teoGetLibteonetVersion 
 it('teoGetLibteonetVersion', function () {
     
     console.log('teoGetLibteonetVersion');
     
     console.time('t1');
-    var output = libteonet.teoGetLibteonetVersion();
-    output.should.be.aboveOrEqual('0.1.33');
+    var output = teonet.lib.teoGetLibteonetVersion();
+    output.should.be.aboveOrEqual('0.1.31');
     console.timeEnd('t1');
 
     console.time('t2');
-    var output1 = libteonet.teoGetLibteonetVersion();
+    var output1 = teonet.lib.teoGetLibteonetVersion();
     console.timeEnd('t2');
 
     console.time('t3');
-    var output2 = libteonet.teoGetLibteonetVersion();
+    var output2 = teonet.lib.teoGetLibteonetVersion();
     console.timeEnd('t3');
 
     console.log('Libteonet Version: ' + output);
-
 });
 
-it('', function(){
-    
-});
+// Test ...
+//it('', function(){
+//    
+//});
