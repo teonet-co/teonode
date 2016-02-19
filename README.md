@@ -1,1 +1,1 @@
-# NodeJS Teonet client sample application 
+# Teonet node application 
