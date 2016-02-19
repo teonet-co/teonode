@@ -1,7 +1,7 @@
 /* 
  * The MIT License
  *
- * Copyright 2016 Kirill Scherba <kirill@scherba.ru>.
+ * Copyright 2016 kirill.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,40 +22,32 @@
  * THE SOFTWARE.
  */
 
-var ref = require('ref');
-var ffi = require('ffi');
-var ArrayType = require('ref-array');
-var StringArray = ArrayType('string');
+// Declare Teonet
+var libteonet = require('../teonet');
+var should = require('should'); // http://shouldjs.github.io/
 
+// teoGetLibteonetVersion
+it('teoGetLibteonetVersion', function () {
+    
+    console.log('teoGetLibteonetVersion');
+    
+    console.time('t1');
+    var output = libteonet.teoGetLibteonetVersion();
+    output.should.be.aboveOrEqual('0.1.33');
+    console.timeEnd('t1');
 
-module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
-  'teoGetLibteonetVersion': [ 'string', [ ] ],
-  'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
-  'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
-  'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ]
+    console.time('t2');
+    var output1 = libteonet.teoGetLibteonetVersion();
+    console.timeEnd('t2');
+
+    console.time('t3');
+    var output2 = libteonet.teoGetLibteonetVersion();
+    console.timeEnd('t3');
+
+    console.log('Libteonet Version: ' + output);
+
 });
 
-// ksnetEvMgrSetCustomTimer(ke, 2.00);
-
-/*
- // Start teonet
- ksnetEvMgrRun(ke); 
-
-
- ksnetEvMgrClass *ke = ksnetEvMgrInit(argc, argv, NULL, 3); 
-  
- 
- ksnetEvMgrClass *ksnetEvMgrInit(
-    int argc, 
-    char** argv,
-    void (*event_cb)(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data),
-    int options
-);
-  
-  
-ksnetEvMgrClass *ksnetEvMgrInit(
-    int argc, char** argv,
-    void (*event_cb)(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data),
-    int options
-);
-*/
+it('', function(){
+    
+});
