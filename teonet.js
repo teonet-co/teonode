@@ -28,7 +28,8 @@ var ArrayType = require('ref-array');
 var StringArray = ArrayType('string');
 
 
-module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
+//module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
+module.exports = ffi.Library('./lib/libteonet', {
   'teoGetLibteonetVersion': [ 'string', [ ] ],
   'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
   'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
