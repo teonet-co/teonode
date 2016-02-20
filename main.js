@@ -25,6 +25,10 @@
 /* global process */
 
 // Declare Teonet library
+/**
+ * Teonet module
+ * @type Module teonet|Module teonet
+ */
 var teonet = require('./teonet');
 //var ref = require('ref');
 

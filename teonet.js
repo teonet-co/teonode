@@ -57,7 +57,9 @@ var ksnCorePacketDataPtr = ref.refType(ksnCorePacketData);
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
 module.exports =  { 
     
-    // TODO: Teonet events enum
+    /**
+     * TODO: Teonet events enum
+     */
     ev: {
         
         /*
