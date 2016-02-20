@@ -12,11 +12,11 @@ http://repo.ksproject.org/ubuntu/
 
     sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8CC88F3BE7D6113C
     sudo apt-get install -y software-properties-common
-    sudo add-apt-repository "deb http://repo.ksproject.org/ubuntu/ teonet main"
+    sudo add-apt-repository "deb http://repo.ksproject.org/ubuntu/ teonet main"    
+
+#### Install / Update
+
     sudo apt-get update
-
-#### Install
-
     sudo apt-get install -y libteonet-dev
     sudo ldconfig
 

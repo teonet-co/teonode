@@ -54,28 +54,37 @@ var eventCb = function (ke, ev, data, data_len, user_data) {
     
     switch(ev) {
         
-        // EV_K_STARTED 
-        case 0:            
+        // EV_K_STARTED #0 Calls immediately after event manager starts
+        case teonet.ev.EV_K_STARTED:            
             console.log('Teonode started ....');
             //console.log('Event EV_K_STARTED processing, arguments: ', arguments);
             break;
             
-        // EV_K_TIMER    
-        case 9:
+        // EV_K_TIMER #9 Timer event, seted by ksnetEvMgrSetCustomTimer   
+        case teonet.ev.EV_K_TIMER:
             console.log('Timer ....' + teonet.lib.ksnetEvMgrGetTime(ke).toFixed(3));
             break;
             
-        // EV_K_CONNECTED
-        case 3:
+        // EV_K_CONNECTED #3 New peer connected to host event
+        case teonet.ev.EV_K_CONNECTED:
+            
             var rd = new teonet.ksnCorePacketData(data);
             
             console.log('Peer "' + rd.from + '" connected'/*, arguments*/);
+            break;
+            
+        // EV_K_DISCONNECTED #4 A peer was disconnected from host
+        case teonet.ev.EV_K_DISCONNECTED:
+            
+            var rd = new teonet.ksnCorePacketData(data);
+            
+            console.log('Peer "' + rd.from + '" disconnected'/*, arguments*/);
             break;
     }
 };
 
 // Initialize teonet event manager and Read configuration
-var ke = teonet.ksnetEvMgrInit(eventCb);
+var ke = teonet.ksnetEvMgrInit(eventCb, 3);
 
 // Set application type
 teonet.lib.teoSetAppType(ke, "teo-node");
@@ -84,7 +93,11 @@ teonet.lib.teoSetAppType(ke, "teo-node");
 teonet.lib.ksnetEvMgrSetCustomTimer(ke, 5.00);
 
 // Start teonet
-teonet.lib.ksnetEvMgrRun(ke);
+//teonet.lib.ksnetEvMgrRun(ke); // Start without async
+teonet.lib.ksnetEvMgrRun.async(ke, function (err, res) {
+  if (err) throw err;
+  console.log("Teonet exited, res: " + res + " ...");
+});
 
 // Show exit message
-console.log("Teonode exited...");
+console.log("Teonode application initialization finished ...");
