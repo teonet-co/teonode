@@ -26,6 +26,7 @@
 
 // Declare Teonet library
 var teonet = require('./teonet');
+//var ref = require('ref');
 
 // Application welcome message
 console.log("Teonode ver. 0.0.1, based on teonet ver ", teonet.lib.teoGetLibteonetVersion());
@@ -56,17 +57,19 @@ var eventCb = function (ke, ev, data, data_len, user_data) {
         // EV_K_STARTED 
         case 0:            
             console.log('Teonode started ....');
-            console.log('Event EV_K_STARTED processing, arguments: ', arguments);
+            //console.log('Event EV_K_STARTED processing, arguments: ', arguments);
             break;
             
         // EV_K_TIMER    
         case 9:
-            console.log('Timer ....');
+            console.log('Timer ....' + teonet.lib.ksnetEvMgrGetTime(ke).toFixed(3));
             break;
             
         // EV_K_CONNECTED
         case 3:
-            console.log('Peer ' + data.toString() + " connected event: \n", arguments);
+            var rd = new teonet.ksnCorePacketData(data);
+            
+            console.log('Peer "' + rd.from + '" connected'/*, arguments*/);
             break;
     }
 };

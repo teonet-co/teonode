@@ -25,27 +25,55 @@
 var ref = require('ref');
 var ffi = require('ffi');
 var ArrayType = require('ref-array');
+var StructType = require('ref-struct');
 var StringArray = ArrayType('string');
 
+// Define the "ksnCorePacketData" struct type
+var ksnCorePacketData = StructType({
+
+    addr: 'string',                 ///< Remote peer IP address
+    port: 'int',                    ///< Remote peer port
+    mtu: 'int',                     ///< Remote mtu
+    from: 'string',                 ///< Remote peer name
+    from_len: 'uint8',              ///< Remote peer name length
+
+    cmd: 'uint8',                   ///< Command ID
+
+    data: 'void *',                 ///< Received data
+    data_len: 'size_t',             ///< Received data length
+
+    raw_data: 'void *',             ///< Received packet data
+    raw_data_len: 'size_t',         ///< Received packet length
+
+    arp: 'void *', /* ksnet_arp_data * */    ///< Pointer to ARP Table data
+
+    l0_f: 'int'                     ///< L0 command flag (from set to l0 client name)  
+});
+var ksnCorePacketDataPtr = ref.refType(ksnCorePacketData);
 
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
 module.exports =  { 
+   
+    'ksnCorePacketData': ksnCorePacketData,    
+    //'ksnCorePacketDataPtr': ksnCorePacketDataPtr,
     
-   lib: ffi.Library('libteonet', {
-    'teoGetLibteonetVersion': [ 'string', [ ] ],
-    'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
-    'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
-    'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ],
-    'teoSetAppType': [ 'void' , [ 'pointer', 'string' ] ]
+    lib:ffi.Library('libteonet', {
+      'teoGetLibteonetVersion': [ 'string', [ ] ],
+      'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
+      'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
+      'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ],
+      'teoSetAppType': [ 'void' , [ 'pointer', 'string' ] ],
+      'ksnetEvMgrGetTime': [ 'double',[ 'pointer' ] ]
     }), 
   
     eventCbPtr: function(eventCb) {
-      return ffi.Callback('void', ['pointer', 'int', 'pointer', 'int', 'pointer'], eventCb);
+      return ffi.Callback('void', ['pointer', 'int', ksnCorePacketDataPtr, 'size_t', 'pointer'], eventCb);
     },
     
     ksnetEvMgrInit: function(eventCb) {
         return this.lib.ksnetEvMgrInit(process.argv.length-1, Array.from(process.argv).slice(1), this.eventCbPtr(eventCb), 3);
     }
+    
   };
 
 
