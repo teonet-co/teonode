@@ -28,10 +28,13 @@ var ArrayType = require('ref-array');
 var StructType = require('ref-struct');
 var StringArray = ArrayType('string');
 
-// Define the "ksnCorePacketData" struct type
+/**
+ * Define the "ksnCorePacketData" struct type
+ * 
+ */
 var ksnCorePacketData = StructType({
 
-    addr: 'string',                 ///< Remote peer IP address
+    addr: 'string',                 ///< @param {'string'} addr Remote peer IP address
     port: 'int',                    ///< Remote peer port
     mtu: 'int',                     ///< Remote mtu
     from: 'string',                 ///< Remote peer name
@@ -53,7 +56,99 @@ var ksnCorePacketDataPtr = ref.refType(ksnCorePacketData);
 
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
 module.exports =  { 
+    
+    // TODO: Teonet events enum
+    ev: {
+        
+        /*
+         * Default event description example:
+         * 
+         * Description:
+         * #0 Calls immediately after event manager starts
+         * 
+         * Parameters definition:
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data Pointer to data, usually Pointer to ksnCorePacketData
+         * @param {'size_t'} data_len Size of data, usually size f ksnCorePacketData
+         * @param {'pointer'} user_data Pointer to user data
+         */
+        
+        /**
+         * #0 Calls immediately after event manager starts
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data null
+         * @param {'size_t'} data_len 0
+         * @param {'pointer'} user_data null
+         */
+        EV_K_STARTED: 0,
+        
+        /**
+         * #1 Calls before event manager stopped
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data null
+         * @param {'size_t'} data_len 0
+         * @param {'pointer'} user_data null
+         */
+        EV_K_STOPPED_BEFORE: 1,
+        
+        /**
+         * #2 Calls after event manager stopped
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data null
+         * @param {'size_t'} data_len 0
+         * @param {'pointer'} user_data null
+         */
+        EV_K_STOPPED: 2,
+        
+        /**
+         * #3 New peer connected to host event
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data Pointer to ksnCorePacketData
+         * @param {'size_t'} data_len Size of ksnCorePacketData
+         * @param {'pointer'} user_data null
+         */
+        EV_K_CONNECTED: 3,
+        
+        /**
+         * #4 A peer was disconnected from host
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data Pointer to ksnCorePacketData
+         * @param {'size_t'} data_len Size of ksnCorePacketData
+         * @param {'pointer'} user_data null
+         */
+        EV_K_DISCONNECTED: 4,
+        
+        /**
+         * #9 Timer event, seted by ksnetEvMgrSetCustomTimer
+         * 
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {int} ev This event
+         * @param {'pointer'} data null
+         * @param {'size_t'} data_len 0
+         * @param {'pointer'} user_data null
+         */
+        EV_K_TIMER: 9
+        
+
+    },
    
+    /**
+     * The "ksnCorePacketData" struct type
+     * 
+     * @param {'string'} addr Remote peer IP address
+     */
     'ksnCorePacketData': ksnCorePacketData,    
     //'ksnCorePacketDataPtr': ksnCorePacketDataPtr,
     
@@ -70,8 +165,18 @@ module.exports =  {
       return ffi.Callback('void', ['pointer', 'int', ksnCorePacketDataPtr, 'size_t', 'pointer'], eventCb);
     },
     
-    ksnetEvMgrInit: function(eventCb) {
-        return this.lib.ksnetEvMgrInit(process.argv.length-1, Array.from(process.argv).slice(1), this.eventCbPtr(eventCb), 3);
+    /**
+     * Initialize KSNet Event Manager and network
+     *
+     * @param {'pointer'} eventCb Events callback function called when an event happens
+     * @param {int}       options Options set: <br>
+     *                      READ_OPTIONS #1 - read options from command line parameters; <br>
+     *                      READ_CONFIGURATION #2 - read options from configuration file
+     * 
+     * @return Pointer to created ksnetEvMgrClass
+     */    
+    ksnetEvMgrInit: function(eventCb, options) {
+        return this.lib.ksnetEvMgrInit(process.argv.length-1, Array.from(process.argv).slice(1), this.eventCbPtr(eventCb), options);
     }
     
   };
