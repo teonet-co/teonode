@@ -66,7 +66,12 @@ var eventCb = function (ke, ev, data, data_len, user_data) {
             
         // EV_K_TIMER #9 Timer event, seted by ksnetEvMgrSetCustomTimer   
         case teonet.ev.EV_K_TIMER:
+            
             console.log('Timer ....' + teonet.lib.ksnetEvMgrGetTime(ke).toFixed(3));
+            
+            // CMD_ECHO
+            teonet.lib.ksnCoreSendCmdto(teonet.getKc(ke), 'teo-ws', 65, "hello", 5);
+            
             break;
             
         // EV_K_CONNECTED #3 New peer connected to host event
@@ -97,11 +102,11 @@ teonet.lib.teoSetAppType(ke, "teo-node");
 teonet.lib.ksnetEvMgrSetCustomTimer(ke, 5.00);
 
 // Start teonet
-//teonet.lib.ksnetEvMgrRun(ke); // Start without async
-teonet.lib.ksnetEvMgrRun.async(ke, function (err, res) {
-  if (err) throw err;
-  console.log("Teonet exited, res: " + res + " ...");
-});
+teonet.lib.ksnetEvMgrRun(ke); // Start without async
+//teonet.lib.ksnetEvMgrRun.async(ke, function (err, res) {
+//  if (err) throw err;
+//  console.log("Teonet exited, res: " + res + " ...");
+//});
 
 // Show exit message
 console.log("Teonode application initialization finished ...");
