@@ -22,19 +22,17 @@
  * THE SOFTWARE.
  */
 
-/* global process */
-
-// Declare Teonet library
 /**
- * Teonet module
+ * Declare Teonet library module
  * @type Module teonet|Module teonet
  */
 var teonet = require('./teonet');
-//var ref = require('ref');
 
 // Application welcome message
-console.log("Teonode ver. 0.0.1, based on teonet ver ", teonet.lib.teoGetLibteonetVersion());
+console.log("Teonode ver. 0.0.1, based on teonet ver. " + teonet.version());
 
+// Start teonet module
+teonet_main();
 
 /**
  * Teonet event callback
@@ -44,69 +42,87 @@ console.log("Teonode ver. 0.0.1, based on teonet ver ", teonet.lib.teoGetLibteon
  * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data,
  *              size_t data_len, void *user_data)
  *
- * note: https://github.com/node-ffi/node-ffi/issues/72
+ * *note: https://github.com/node-ffi/node-ffi/issues/72
  * 
- * @param {pointer} ke Pointer to ksnetEvMgrClass, see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
- * @param {int} ev Teonet event number, see the http://repo.ksproject.org/docs/teonet/ev__mgr_8h.html#ad7b9bff24cb809ad64c305b3ec3a21fe
+ * @param {pointer} ke Pointer to ksnetEvMgrClass, 
+ *     see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
+ * @param {int} ev Teonet event number, 
+ *     see the http://repo.ksproject.org/docs/teonet/ev__mgr_8h.html#ad7b9bff24cb809ad64c305b3ec3a21fe
  * @param {pointer} data Binary or string (depended on event) data
  * @param {int} data_len Data length
  * @param {pointer} user_data Additional poiner to User data
  * 
  * @returns {void}
  */
-var eventCb = function (ke, ev, data, data_len, user_data) {
+function eventCb (ke, ev, data, data_len, user_data) {
     
     switch(ev) {
         
         // EV_K_STARTED #0 Calls immediately after event manager starts
-        case teonet.ev.EV_K_STARTED:            
-            console.log('Teonode started ....');
-            //console.log('Event EV_K_STARTED processing, arguments: ', arguments);
+        case teonet.ev.EV_K_STARTED: 
+            
+            console.log('Teonode started .... ');
             break;
             
         // EV_K_TIMER #9 Timer event, seted by ksnetEvMgrSetCustomTimer   
         case teonet.ev.EV_K_TIMER:
             
-            console.log('Timer ....' + teonet.lib.ksnetEvMgrGetTime(ke).toFixed(3));
-            
-            // CMD_ECHO
-            teonet.lib.ksnCoreSendCmdto(teonet.getKc(ke), 'teo-ws', 65, "hello", 5);
+            // Send CMD_ECHO command to peer with name "teo-web"            
+            // teonet.sendCmdTo(ke, 'teo-web', 65, 'hello', 6);
+            teonet.sendCmdEchoTo(ke, 'teo-web', 'hello', 6);
             
             break;
             
         // EV_K_CONNECTED #3 New peer connected to host event
         case teonet.ev.EV_K_CONNECTED:
             
-            var rd = new teonet.ksnCorePacketData(data);
-            
-            console.log('Peer "' + rd.from + '" connected'/*, arguments*/);
+            //var rd = new teonet.packetData(data);            
+            console.log('Peer "' + teonet.packetData(data).from/*rd.from*/ + 
+                        '" connected'/*, arguments*/);
             break;
             
         // EV_K_DISCONNECTED #4 A peer was disconnected from host
         case teonet.ev.EV_K_DISCONNECTED:
             
-            var rd = new teonet.ksnCorePacketData(data);
+            //var rd = new teonet.packetData(data);            
+            console.log('Peer "' + teonet.packetData(data).from/*rd.from*/ + 
+                        '" disconnected'/*, arguments*/);
+            break;
             
-            console.log('Peer "' + rd.from + '" disconnected'/*, arguments*/);
+        // EV_K_RECEIVED #5 This host Received a data    
+        case teonet.ev.EV_K_RECEIVED:
+        
+            // DATA event
+            var rd = new teonet.packetData(data);
+            console.log('Received a data: ' + rd.data_len + 
+                        ' bytes length, cmd: ' + rd.cmd, rd);
+                
+            switch(rd.cmd) {
+                
+            }           
             break;
     }
-};
+}
 
-// Initialize teonet event manager and Read configuration
-var ke = teonet.ksnetEvMgrInit(eventCb, 3);
+/**
+ * Initialize and start Teonet
+ * 
+ * @returns {undefined} 
+ */
+function teonet_main() {
+    
+    // Initialize teonet event manager and Read configuration
+    var ke = teonet.init(eventCb, 3);
 
-// Set application type
-teonet.lib.teoSetAppType(ke, "teo-node");
+    // Set application type
+    teonet.setAppType(ke, "teo-node");
 
-// Start Timer event 
-teonet.lib.ksnetEvMgrSetCustomTimer(ke, 5.00);
+    // Start Timer event 
+    teonet.setCustomTimer(ke, 5.000);
 
-// Start teonet
-teonet.lib.ksnetEvMgrRun(ke); // Start without async
-//teonet.lib.ksnetEvMgrRun.async(ke, function (err, res) {
-//  if (err) throw err;
-//  console.log("Teonet exited, res: " + res + " ...");
-//});
+    // Start teonet
+    teonet.run(ke);
 
-// Show exit message
-console.log("Teonode application initialization finished ...");
+    // Show exit message
+    console.log("Teonode application initialization finished ...");
+}
