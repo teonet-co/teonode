@@ -25,6 +25,6 @@
     "should": "^8.2.2"
   },
   "scripts": {
-    "start": "node main.js teo-node -a 10.12.35.53"
+    "start": "node main.js teo-node"
   }
 }

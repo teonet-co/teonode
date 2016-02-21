@@ -42,7 +42,7 @@ var ksnCorePacketData = StructType({
 
     cmd: 'uint8',                   ///< @param {'uint8'} cmd Command ID
 
-    data: 'pointer',                ///< @param {'pointer'} data Received data
+    data: 'string',                 ///< @param {'pointer'} data Received data
     data_len: 'size_t',             ///< @param {'size_t'} data_len Received data length
 
     raw_data: 'pointer',            ///< @param {'pointer'} raw_data Received packet data
@@ -335,7 +335,7 @@ module.exports =  {
       
       // ksnCoreSendto(kco->kc, rd->addr, rd->port, CMD_ECHO_ANSWER,
       //          rd->data, rd->data_len);
-      'ksnCoreSendto': [ 'pointer', [ 'pointer', 'string', 'int', 'uint8', 'pointer', 'size_t' ] ],
+      'ksnCoreSendto': [ 'pointer', [ 'pointer', 'string', 'int', 'uint8', 'string', 'size_t' ] ],
       
       // int ksnCommandSendCmdEcho(ksnCommandClass *kco, char *to, void *data,
       //                    size_t data_len)
@@ -393,30 +393,29 @@ module.exports =  {
      * 
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
      * @param {'pointer'} rd_ptr Pointer to ksnCorePacketData 
-     * @param {'string'}  name Peer or Client name
+     * param {'string'}  name Peer or Client name
      * @param {'uint8'} cmd Comand to send
      * @param {'pointer'} out_data Output data
      * @param {'size_t'} out_data_len Output data length
      * @returns {'int'|'pointer'}
      */
-    sendCmdAnswerTo: function(ke, rd_ptr, name, cmd, out_data, out_data_len) {
+    sendCmdAnswerTo: function(ke, rd_ptr, cmd, out_data, out_data_len) {
         
         var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
         
         if(rd.l0_f) 
             retavl = this.lib.ksnLNullSendToL0(ke, 
-                rd.addr, rd.port, name, name.length + 1, cmd, 
+                rd.addr, rd.port, rd.from, rd.from_len, cmd, 
                 out_data, out_data_len); 
         else {
-            var ke_ptr = new ksnetEvMgrClass(ke);
+            //var ke_ptr = new ksnetEvMgrClass(ke);
             
             //retavl = ksnCoreSendCmdto(ke_ptr.kc, name, cmd, // TODO: parse ke.kc
             //    out_data, out_data_len);
             
             // TODO: use this function insted of ksnCoreSendCmdto
-            this.lib.ksnCoreSendto(ke_ptr.kc, 
-                rd.addr, rd.port, cmd,
+            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd,
                 out_data, out_data_len);
         }
                 
@@ -482,7 +481,7 @@ module.exports =  {
      * @return Pointer to created ksnetEvMgrClass
      */    
     init: function(eventCb, options) {
-        return this.lib.ksnetEvMgrInit(process.argv.length-1, Array.from(process.argv).slice(1), this.eventCbPtr(eventCb), options);
+        return this.lib.ksnetEvMgrInit(process.argv.length-1, process.argv.slice(1), this.eventCbPtr(eventCb), options);
     },
     
     /**

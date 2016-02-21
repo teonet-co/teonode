@@ -32,7 +32,16 @@ var teonet = require('./teonet');
 console.log("Teonode ver. 0.0.1, based on teonet ver. " + teonet.version());
 
 // Start teonet module
-teonet_main();
+teo_main();
+
+/**
+ * This application API commands
+ */
+ var teo_api = {
+          
+    CMD_N_HELLO: 129,          ///< @param {'uint8'} CMD_N_HELLO Request Hello message
+    CMD_N_HELLO_ANSWER: 130    ///< @param {'uint8'} CMD_N_HELLO_ANSWER Answer to CMD_N_HELLO command 
+ };
 
 /**
  * Teonet event callback
@@ -54,7 +63,7 @@ teonet_main();
  * 
  * @returns {void}
  */
-function eventCb (ke, ev, data, data_len, user_data) {
+function teo_eventCb (ke, ev, data, data_len, user_data) {
     
     switch(ev) {
         
@@ -76,9 +85,14 @@ function eventCb (ke, ev, data, data_len, user_data) {
         // EV_K_CONNECTED #3 New peer connected to host event
         case teonet.ev.EV_K_CONNECTED:
             
-            //var rd = new teonet.packetData(data);            
-            console.log('Peer "' + teonet.packetData(data).from/*rd.from*/ + 
-                        '" connected'/*, arguments*/);
+            var rd = new teonet.packetData(data);
+            console.log('Peer "' + rd.from + '" connected'/*, arguments*/);
+                
+            // Send HELLO command to connected peer 'teo-node-2'     
+            if(rd.from === 'teo-node-2') {
+                teonet.sendCmdAnswerTo(ke, rd, teo_api.CMD_N_HELLO, null, 0);
+            }
+                
             break;
             
         // EV_K_DISCONNECTED #4 A peer was disconnected from host
@@ -97,10 +111,28 @@ function eventCb (ke, ev, data, data_len, user_data) {
             console.log('Received a data: ' + rd.data_len + 
                         ' bytes length, cmd: ' + rd.cmd, rd);
                 
+            // Command    
             switch(rd.cmd) {
                 
+                case teo_api.CMD_N_HELLO:
+                    
+                    var data_out = "Hello";
+                    console.log('Send CMD_N_HELLO:', data_out, 'to', rd.from);
+                    teonet.sendCmdAnswerTo(ke, rd, teo_api.CMD_N_HELLO_ANSWER, 
+                        data_out, data_out.length);
+                    break;
+                    
+                case teo_api.CMD_N_HELLO_ANSWER:
+                    console.log('Got CMD_N_HELLO_ANSWER:', rd.data, 'from:', rd.from);
+                    break;
+                
+                default:
+                    break;
             }           
             break;
+            
+        default:
+            break
     }
 }
 
@@ -109,10 +141,10 @@ function eventCb (ke, ev, data, data_len, user_data) {
  * 
  * @returns {undefined} 
  */
-function teonet_main() {
+function teo_main() {
     
     // Initialize teonet event manager and Read configuration
-    var ke = teonet.init(eventCb, 3);
+    var ke = teonet.init(teo_eventCb, 3);
 
     // Set application type
     teonet.setAppType(ke, "teo-node");
