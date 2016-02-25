@@ -461,13 +461,22 @@ module.exports =  {
      * @returns {nm$_ffi.exports.Callback}
      */
     eventCbPtr: function(eventCb) {
-      return ffi.Callback('void', [ksnetEvMgrClassPtr, 'int', ksnCorePacketDataPtr, 'size_t', 'pointer'], 
-        //eventCb
-        function(ke_ptr, ev, data, data_len, user_dat) {
-            //var ke = new ksnetEvMgrClass(ke_ptr);
-            eventCb(ksnetEvMgrClass(ke_ptr), ev, data, data_len, user_dat);
-        }
-      );
+
+        var cb = ffi.Callback('void', [ksnetEvMgrClassPtr, 'int', ksnCorePacketDataPtr, 'size_t', 'pointer'],
+            //eventCb
+            function(ke_ptr, ev, data, data_len, user_dat) {
+                //var ke = new ksnetEvMgrClass(ke_ptr);
+                eventCb(ksnetEvMgrClass(ke_ptr), ev, data, data_len, user_dat);
+            }
+        );
+
+        // hack for node-ffi
+        // see: https://github.com/rbranson/node-ffi/issues/72
+        process.on('exit', function() {
+            cb;
+        });
+
+        return cb;
     },
     
     /**
