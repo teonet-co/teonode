@@ -240,9 +240,17 @@ module.exports =  {
          * @param {'size_t'} data_len 0
          * @param {'pointer'} user_data null
          */
-        EV_K_TIMER: 9
-        
+        EV_K_TIMER: 9,
 
+        /**
+         * Hotkey event
+         */
+        EV_K_HOTKEY: 10,
+
+        /**
+         * User press A hotkey
+         */
+        EV_K_USER: 11
     },
    
     /**
