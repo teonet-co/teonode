@@ -29,6 +29,7 @@
  * @type Module teonet|Module teonet
  */
 var teonet = require('./teonet');
+var ref = require('ref');
 
 /**
  * This application API commands
@@ -38,7 +39,8 @@ var teo_api = {
     CMD_HOST_INFO: 90,          ///< #90 Request host info
     CMD_HOST_INFO_ANSWER: 91,   ///< #91 Host info amswer
     CMD_N_HELLO: 129,          ///< @param {'uint8'} CMD_N_HELLO Request Hello message
-    CMD_N_HELLO_ANSWER: 130    ///< @param {'uint8'} CMD_N_HELLO_ANSWER Answer to CMD_N_HELLO command
+    CMD_N_HELLO_ANSWER: 130,    ///< @param {'uint8'} CMD_N_HELLO_ANSWER Answer to CMD_N_HELLO command
+    CMD_ECHO_ANSWER: 66
 };
 
 var peer_status = {
@@ -46,6 +48,16 @@ var peer_status = {
     OFFLINE: 1
 };
 
+var app_states = {
+    STATE_NONE: 0,
+    STATE_WAIT_KEY: 1,
+    STATE_WAIT_STRING: 2
+};
+
+
+var app_state = app_states.STATE_NONE;
+
+var _ke; // right pointer to ksnetEvMgrClass
 var peers = Object.create(null);
 
 
@@ -76,12 +88,11 @@ teo_main();
  * @returns {void}
  */
 function teo_eventCb(ke, ev, data, data_len, user_data) {
-
     switch (ev) {
 
         // EV_K_STARTED #0 Calls immediately after event manager starts
         case teonet.ev.EV_K_STARTED:
-
+            _ke = ke;
             console.log('Teonode started .... ');
             break;
 
@@ -98,13 +109,7 @@ function teo_eventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_CONNECTED:
 
             var rd = new teonet.packetData(data);
-            console.log('Peer "' + rd.from + '" connected'/*, arguments*/);
-
-            // Send HELLO command to connected peer 'teo-node-2'     
-            //if (rd.from === 'teo-node-2') {
-            //    teonet.sendCmdAnswerTo(ke, rd, teo_api.CMD_N_HELLO, null, 0);
-            //}
-
+            console.log('Peer "' + rd.from + '" connected');
 
             peers[rd.from] = peers[rd.from] || {};
             peers[rd.from].status = peer_status.ONLINE;
@@ -137,11 +142,9 @@ function teo_eventCb(ke, ev, data, data_len, user_data) {
             switch (rd.cmd) {
 
                 case teo_api.CMD_N_HELLO:
-
                     var data_out = "Hello";
                     console.log('Send CMD_N_HELLO:', data_out, 'to', rd.from);
-                    teonet.sendCmdAnswerTo(ke, rd, teo_api.CMD_N_HELLO_ANSWER,
-                        data_out, data_out.length);
+                    teonet.sendCmdAnswerTo(ke, rd, teo_api.CMD_N_HELLO_ANSWER, data_out, data_out.length);
                     break;
 
                 case teo_api.CMD_N_HELLO_ANSWER:
@@ -150,9 +153,11 @@ function teo_eventCb(ke, ev, data, data_len, user_data) {
 
                 case teo_api.CMD_HOST_INFO_ANSWER:
                     console.log('Got CMD_HOST_INFO_ANSWER:', rd.data, 'from:', rd.from);
-
                     peers[rd.from].host_info = JSON.parse(rd.data);
+                    break;
 
+                case teo_api.CMD_ECHO_ANSWER:
+                    peers[rd.from].last_echo_answer = Date.now();
                     break;
                 default:
                     break;
@@ -160,16 +165,73 @@ function teo_eventCb(ke, ev, data, data_len, user_data) {
             break;
 
         case teonet.ev.EV_K_HOTKEY:
-            console.log('EV_K_HOTKEY');
+
+            //check hotkeys
+            if (app_state === app_states.STATE_WAIT_KEY) {
+
+                //ASCII
+                var keyCode = ref.get(data, 0, ref.types.int32);
+                var command = String.fromCharCode(keyCode);
+
+                switch (command) {
+                    // exit
+                    case '0':
+                        app_state = app_states.STATE_NONE;
+                        break;
+                    case '1':
+                        console.log("Peers: %j", peers);
+                        app_state = app_states.STATE_NONE;
+                        break;
+                    default:
+                        console.log("Wrong key pressed... \nPress a or h to help, or 0 to exit this menu.");
+                        break;
+                }
+
+                // Show prompt
+                if (app_state == app_states.STATE_WAIT_KEY) {
+                    process.stdout.write('> ');
+                }
+            }
+
             break;
 
         case teonet.ev.EV_K_USER:
-            console.log("Peers: %j", peers);
+            process.stdout.write("\n" +
+                "Test menu:\n" +
+                "  1 - print peers\n" +
+                "  0 - exit\n" +
+                "> "
+            );
+
+            app_state = app_states.STATE_WAIT_KEY;
+            break;
+
+        case teonet.ev.EV_K_STOPPED:
+            clearInterval(pingIntervalId);
             break;
         default:
             break
     }
 }
+
+// ping peers
+let pingIntervalId = setInterval(() => {
+    if (!_ke || !peers) {
+        return;
+    }
+
+    for (let name in peers) {
+        if (peers[name].status !== peer_status.ONLINE) {
+            continue;
+        }
+
+        // TODO logic to reset
+
+        teonet.sendCmdEchoTo(_ke, name, 'ping', 3);
+        peers[name].last_echo = Date.now();
+    }
+}, 1000);
+
 
 /**
  * Initialize and start Teonet
