@@ -40,8 +40,8 @@ var teonet = require('./../teonet');
 var teoApi = {
     CMD_RESET: 8, // Reset command, data: byte or char 0 - soft reset; 1 - hard reset
 
-    //PEERS: 72,              ///< #72 Get peers
-    //PEERS_ANSWER: 73,       ///< #73 Get peers answer
+    PEERS: 72,              ///< #72 Get peers
+    PEERS_ANSWER: 73,       ///< #73 Get peers answer
     
     CMD_HOST_INFO: 90,          ///< #90 Request host info
     CMD_HOST_INFO_ANSWER: 91,   ///< #91 Host info amswer
@@ -118,9 +118,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         // EV_K_TIMER #9 Timer event, seted by ksnetEvMgrSetCustomTimer   
         case teonet.ev.EV_K_TIMER:
 
-
-            teonet.sendCmdAnswerTo(ke, rd, teoApi.PEERS, '', 0);
-
             break;
 
         // EV_K_CONNECTED #3 New peer connected to host event
@@ -134,6 +131,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
 
             teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_HOST_INFO, 'JSON', 4);
+            teonet.sendCmdAnswerTo(ke, rd, teoApi.PEERS, 'JSON', 4);
 
             break;
 
@@ -174,6 +172,10 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                 case teoApi.CMD_ECHO_ANSWER:
                     peers[rd.from].last_echo_answer = Date.now();
+                    break;
+
+                case teoApi.PEERS_ANSWER:
+                    console.log('Got PEERS_ANSWER:',  rd, 'from:', rd.from); // TODO rd.data не разбирается
                     break;
 
                 default:
