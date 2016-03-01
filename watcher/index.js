@@ -42,7 +42,7 @@ var teoApi = {
 
     PEERS: 72,              ///< #72 Get peers
     PEERS_ANSWER: 73,       ///< #73 Get peers answer
-    
+
     CMD_HOST_INFO: 90,          ///< #90 Request host info
     CMD_HOST_INFO_ANSWER: 91,   ///< #91 Host info amswer
     CMD_N_HELLO: 129,          ///< @param {'uint8'} CMD_N_HELLO Request Hello message
@@ -128,6 +128,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
             peers[rd.from] = peers[rd.from] || {};
             peers[rd.from].status = peerStates.ONLINE;
+            peers[rd.from].echoCount = 0; // echo count for connected peer
 
 
             teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_HOST_INFO, 'JSON', 4);
@@ -167,15 +168,15 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                 case teoApi.CMD_HOST_INFO_ANSWER:
                     console.log('Got CMD_HOST_INFO_ANSWER:', rd.data, 'from:', rd.from);
-                    peers[rd.from].host_info = JSON.parse(rd.data);
+                    peers[rd.from].hostInfo = JSON.parse(rd.data);
                     break;
 
                 case teoApi.CMD_ECHO_ANSWER:
-                    peers[rd.from].last_echo_answer = Date.now();
+                    peers[rd.from].echoCount = 0;
                     break;
 
                 case teoApi.PEERS_ANSWER:
-                    console.log('Got PEERS_ANSWER:',  rd, 'from:', rd.from); // TODO rd.data не разбирается
+                    console.log('Got PEERS_ANSWER:', rd, 'from:', rd.from); // TODO rd.data не разбирается
                     break;
 
                 default:
@@ -200,18 +201,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 //                        lastCommand = null;
 //                        break;
 //                    case '1':
-//                        let peersForPrint = [];
-//                        for (let name in peers) {
-//                            peersForPrint.push({
-//                                name: name,
-//                                status: peerStates[peers[name].status],
-//                                type: peers[name].host_info.type,
-//                                version: peers[name].last_echo,
-//                                last_echo_answer: peers[name].last_echo_answer
-//                            })
-//                        }
-//
-//                        console.table(peersForPrint);
+//                        printPeers(peers, false);
 //
 //                        console.log('Press %d to start continuously refresh', command);
 //                        lastCommand = command;
@@ -275,11 +265,22 @@ let pingIntervalId = setInterval(() => {
             continue;
         }
 
-        // TODO logic to reset
         // TODO add read/write to DB
 
+
+        // soft reset after 5 seconds (5 missed pings) and hard reset after 10
+        if (peers[name].echoCount >= 5 && peers[name].echoCount < 10) {
+            // send soft reset
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null, 0);
+            console.log('SOFT RESET', name, peers[name].echoCount);
+        } else if (peers[name].echoCount >= 10) {
+            // send hard reset
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1', 1);
+            console.log('HARD RESET', name, peers[name].echoCount);
+        }
+
         teonet.sendCmdEchoTo(_ke, name, 'ping', 4);
-        peers[name].last_echo = Date.now();
+        peers[name].echoCount = (peers[name].echoCount || 0 ) + 1;
     }
 }, 1000);
 
@@ -315,7 +316,7 @@ function makeEnum(obj) {
 }
 
 function printPeers(peers, rewrite) {
-    let peersForPrint = new Table({head: ["#", "Name", "Status", "Type", "Core", "Echo", "Echo answer"]});
+    let peersForPrint = new Table({head: ["#", "Name", "Status", "Type", "Core", "Echo count"]});
     let cnt = 0;
     for (let name in peers) {
         cnt++;
@@ -323,10 +324,9 @@ function printPeers(peers, rewrite) {
             cnt,
             name,
             peerStates[peers[name].status],
-            peers[name].host_info && peers[name].host_info.type,
-            peers[name].host_info && peers[name].host_info.version,
-            peers[name].last_echo,
-            peers[name].last_echo_answer
+            peers[name].hostInfo && peers[name].hostInfo.type,
+            peers[name].hostInfo && peers[name].hostInfo.version,
+            peers[name].echoCount
         ]);
     }
 
