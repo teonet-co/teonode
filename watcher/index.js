@@ -110,6 +110,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             break;
 
         case teonet.ev.EV_K_USER:
+            console.log('--------------------------------------------------------------------');
             for (let name in peers) {
                 console.log('%s: %d', name, peers[name]);
             }
@@ -151,7 +152,7 @@ let pingIntervalId = setInterval(() => {
             deadCnt++;
         }
 
-        teonet.sendCmdEchoTo(_ke, name, 'ping', 4);
+        teonet.sendCmdEchoTo(_ke, name, null, 0);
         peers[name] = (peers[name] || 0 ) + 1;
     }
 
