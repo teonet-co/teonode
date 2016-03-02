@@ -81,7 +81,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
         // EV_K_CONNECTED #3 New peer connected to host event
         case teonet.ev.EV_K_CONNECTED:
-
             var rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" connected');
             peers[rd.from] = 0;
@@ -89,7 +88,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
         // EV_K_DISCONNECTED #4 A peer was disconnected from host
         case teonet.ev.EV_K_DISCONNECTED:
-
             var rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" disconnected'/*, arguments*/);
 
@@ -115,6 +113,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             for (let name in peers) {
                 console.log('%s: %d', name, peers[name]);
             }
+
             break;
 
         case teonet.ev.EV_K_STOPPED:
@@ -157,8 +156,8 @@ let pingIntervalId = setInterval(() => {
     }
 
     if (cnt > 0 && cnt === deadCnt) {
-        console.log('ALL DEAD (%d), RESTART ITSELF', deadCnt);
-        // TODO kill itself
+        console.log('ALL DEAD (%d), RESTART YOURSELF', deadCnt);
+        process.kill(process.pid, 'SIGUSR2'); // kill yourself
     }
 }, 1000);
 
