@@ -525,7 +525,7 @@ module.exports =  {
 //        _ksn_printf_type_(type), \
 //        module == NULL ? (ke)->ksn_cfg.app_name : module, \
 //        __func__, __FILE__, __LINE__)
-    log: function(ke, module, type, format) {
+    log: function(ke, module, type, message) {
     }
     
   };
