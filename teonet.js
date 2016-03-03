@@ -516,7 +516,16 @@ module.exports =  {
         return self.lib.ksnetEvMgrRun.async(ke, function (err, res) {
             if (err) throw err;
             console.log("Teonet exited, res: " + res + " ...");
-        });
+        });    
+    },
+    
+//    #define ksn_puts(ke, module, type, format) \
+//    ksnet_printf(&((ke)->ksn_cfg), type, \
+//        _ksn_printf_format_(format) "\n", \
+//        _ksn_printf_type_(type), \
+//        module == NULL ? (ke)->ksn_cfg.app_name : module, \
+//        __func__, __FILE__, __LINE__)
+    log: function(ke, module, type, format) {
     }
     
   };
