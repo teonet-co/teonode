@@ -26,5 +26,5 @@ RUN rm ./teonode_install.sh
 # docker build --no-cache -t gitlab.ksproject.org:5000/teonet/teonode -f docker/Dockerfile .
 #
 # Run watcher as an example
-# docker run -it --name watch gitlab.ksproject.org:5000/teonet/teonode node /root/Projects/teonode/apps/watch teo-node-watch
+# docker run -it --name watch gitlab.ksproject.org:5000/teonet/teonode node /root/Projects/teonode/app/watch teo-node-watch
 #
