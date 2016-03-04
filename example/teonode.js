@@ -22,6 +22,8 @@
  * THE SOFTWARE.
  */
 
+'use strict';
+
 /**
  * Declare Teonet library module
  * @type Module teonet|Module teonet
