@@ -26,7 +26,7 @@
  * Declare Teonet library module
  * @type Module teonet|Module teonet
  */
-var teonet = require('./teonet');
+var teonet = require('../teonet');
 
 // Application welcome message
 console.log("Teonode ver. 0.0.1, based on teonet ver. " + teonet.version());
