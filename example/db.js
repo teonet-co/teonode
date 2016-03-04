@@ -156,7 +156,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_STOPPED:
             break;
         default:
-            break
+            break;
     }
 }
 
