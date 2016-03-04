@@ -40,7 +40,7 @@ npm install
 ## By default this script does nothing.
 #
 #
-#node /root/Projects/teonode/watch teo-node-watch
+#node /root/Projects/teonode/apps/watch teo-node-watch
 #
 #
 ##exec "$@"

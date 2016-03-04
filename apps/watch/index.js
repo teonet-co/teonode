@@ -28,7 +28,7 @@
  * Declare Teonet library module
  * @type Module teonet|Module teonet
  */
-var teonet = require('./../teonet');
+var teonet = require('../../teonet');
 
 
 /**
