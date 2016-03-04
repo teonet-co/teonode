@@ -30,7 +30,7 @@ var StringArray = ArrayType('string');
 
 /**
  * Define the "ksnCorePacketData" struct type
- * 
+ *
  */
 var ksnCorePacketData = StructType({
 
@@ -55,8 +55,8 @@ var ksnCorePacketData = StructType({
 var ksnCorePacketDataPtr = ref.refType(ksnCorePacketData);
 
 /**
-  * The "ksnCoreClass" struct type
-  */
+ * The "ksnCoreClass" struct type
+ */
 var ksnCoreClass = StructType({
 
     name: 'string',          ///< Host name
@@ -79,13 +79,13 @@ var ksnCoreClass = StructType({
 //    WSADATA wsaData;
 //    #endif
 
-}); 
+});
 var ksnCoreClassPtr = ref.refType(ksnCoreClass);
 
 /**
  * KSNet event manager functions data
  */
-var ksnetEvMgrClass  = StructType({
+var ksnetEvMgrClass = StructType({
 
     // Pointers to Modules classes
     km: 'pointer',          ///< Pointer to multi net class
@@ -152,13 +152,13 @@ var ksnetEvMgrClassPtr = ref.refType(ksnetEvMgrClass);
 
 
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
-module.exports =  { 
-    
+module.exports = {
+
     /**
      * TODO: Teonet events enum
      */
     ev: {
-        
+
         /*
          * Default event description example:
          * 
@@ -173,10 +173,10 @@ module.exports =  {
          * @param {'size_t'} data_len Size of data, usually size f ksnCorePacketData
          * @param {'pointer'} user_data Pointer to user data
          */
-        
+
         /**
          * #0 Calls immediately after event manager starts
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data null
@@ -184,10 +184,10 @@ module.exports =  {
          * @param {'pointer'} user_data null
          */
         EV_K_STARTED: 0,
-        
+
         /**
          * #1 Calls before event manager stopped
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data null
@@ -195,10 +195,10 @@ module.exports =  {
          * @param {'pointer'} user_data null
          */
         EV_K_STOPPED_BEFORE: 1,
-        
+
         /**
          * #2 Calls after event manager stopped
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data null
@@ -206,10 +206,10 @@ module.exports =  {
          * @param {'pointer'} user_data null
          */
         EV_K_STOPPED: 2,
-        
+
         /**
          * #3 New peer connected to host event
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data Pointer to ksnCorePacketData
@@ -217,10 +217,10 @@ module.exports =  {
          * @param {'pointer'} user_data null
          */
         EV_K_CONNECTED: 3,
-        
+
         /**
          * #4 A peer was disconnected from host
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data Pointer to ksnCorePacketData
@@ -228,12 +228,12 @@ module.exports =  {
          * @param {'pointer'} user_data null
          */
         EV_K_DISCONNECTED: 4,
-        
+
         EV_K_RECEIVED: 5,      ///< #5  This host Received a data
-        
+
         /**
          * #9 Timer event, seted by ksnetEvMgrSetCustomTimer
-         * 
+         *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass
          * @param {int} ev This event
          * @param {'pointer'} data null
@@ -252,10 +252,10 @@ module.exports =  {
          */
         EV_K_USER: 11
     },
-   
+
     /**
      * The "ksnCorePacketData" struct type
-     * 
+     *
      * @param {'string'} addr Remote peer IP address
      * @param {'int'} port Remote peer port
      * @param {'int'} mtu Remote mtu
@@ -267,169 +267,166 @@ module.exports =  {
      * @param {'pointer'} raw_data Received packet data
      * @param {'size_t'} raw_data_len Received packet length
      * @param {'pointer'} arp Pointer to ARP Table data
-     * @param {'int'} l0_f L0 command flag (from set to l0 client name)  
-     * 
+     * @param {'int'} l0_f L0 command flag (from set to l0 client name)
+     *
      */
-    'packetData': ksnCorePacketData,    
+    'packetData': ksnCorePacketData,
     //'ksnCorePacketDataPtr': ksnCorePacketDataPtr,
-    
+
     /**
      * The "ksnetEvMgrClass" struct type
      */
     'ksnetEvMgrClass': ksnetEvMgrClass,
     //'ksnetEvMgrClassPtr': ksnetEvMgrClassPtr,
-    
+
     /**
      * "The "ksnCoreClass" struct type
      */
     'ksnCoreClass': ksnCoreClass,
     //'ksnCoreClassPtr': ksnCoreClassPtr,
-    
-    lib:ffi.Library('libteonet', {
-        
-      /**
-       * Get teonet library version
-       * 
-       * @return {'string'} Teonet library version
-       */  
-      'teoGetLibteonetVersion': [ 'string', [ ] ],
-      
-      'ksnetEvMgrInit': [ 'pointer', [ 'int', StringArray, 'pointer', 'int' ] ],
-      
-      /**
-       * Start KSNet Event Manager and network communication
-       *
-       * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-       * @return {'int'} Alway return 0
-       */      
-      'ksnetEvMgrRun': [ 'int', [ 'pointer' ] ],
-      
-      /**
-       * Set custom timer interval. The event EV_K_TIMER will be send after 
-       * every time_interval period.
-       *
-       * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-       * @param {'double'}  time_interval Timer interval
-       */      
-      'ksnetEvMgrSetCustomTimer': [ 'void', [ 'pointer', 'double' ] ],
-      
-     /**
-      * Set Teonet application type
-      * 
-      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-      * @param {'string'}  type Application type string
-      */      
-      'teoSetAppType': [ 'void' , [ 'pointer', 'string' ] ],
-      
-      /**
-       * Get Teonet event manager time
-       *
-       * @return Teonet event manager time
-       */      
-      'ksnetEvMgrGetTime': [ 'double',[ 'pointer' ] ],
-      
-      /**
-       * Send command by name to peer
-       *
-       * @param {'pointer'} kc Pointer to ksnCoreClass
-       * @param {'pointer'} to Peer name to send to
-       * @param {'uint8'} cmd Command number
-       * @param {'pointer'} data Commands data
-       * @param {'size_t'} data_len Commands data length
-       * 
-       * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
-       */      
-      'ksnCoreSendCmdto': [ 'pointer', [ 'pointer', 'string', 'uint8', 'string', 'size_t' ] ],
-      
-      // ksnCoreSendto(kco->kc, rd->addr, rd->port, CMD_ECHO_ANSWER,
-      //          rd->data, rd->data_len);
-      'ksnCoreSendto': [ 'pointer', [ 'pointer', 'string', 'int', 'uint8', 'string', 'size_t' ] ],
-      
-      // int ksnCommandSendCmdEcho(ksnCommandClass *kco, char *to, void *data,
-      //                    size_t data_len)
-      'ksnCommandSendCmdEcho': [ 'int', [ 'pointer', 'string', 'string', 'size_t' ] ],
-      
-      /**
-       * Send data to L0 client. Usually it is an answer to request from L0 client
-       * 
-       * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-       * @param {'string'} addr IP address of remote peer
-       * @param {'int'} port Port of remote peer
-       * @param {'string'} cname L0 client name (include trailing zero)
-       * @param {'size_t'} cname_length Length of the L0 client name
-       * @param {'uint8'} cmd Command
-       * @param {'pointer'} data Data
-       * @param {'size_t'} data_len Data length
-       * 
-       * @return {'int'} Return 0 if success; -1 if data length is too lage (more than 32319)
-       */      
-      'ksnLNullSendToL0': [ 'int', [ 'pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t' ] ]
-    }),     
-    
+
+    lib: ffi.Library('libteonet', {
+
+        /**
+         * Get teonet library version
+         *
+         * @return {'string'} Teonet library version
+         */
+        'teoGetLibteonetVersion': ['string', []],
+
+        'ksnetEvMgrInit': ['pointer', ['int', StringArray, 'pointer', 'int']],
+
+        /**
+         * Start KSNet Event Manager and network communication
+         *
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @return {'int'} Alway return 0
+         */
+        'ksnetEvMgrRun': ['int', ['pointer']],
+
+        /**
+         * Set custom timer interval. The event EV_K_TIMER will be send after
+         * every time_interval period.
+         *
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {'double'}  time_interval Timer interval
+         */
+        'ksnetEvMgrSetCustomTimer': ['void', ['pointer', 'double']],
+
+        /**
+         * Set Teonet application type
+         *
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {'string'}  type Application type string
+         */
+        'teoSetAppType': ['void', ['pointer', 'string']],
+
+        /**
+         * Get Teonet event manager time
+         *
+         * @return Teonet event manager time
+         */
+        'ksnetEvMgrGetTime': ['double', ['pointer']],
+
+        /**
+         * Send command by name to peer
+         *
+         * @param {'pointer'} kc Pointer to ksnCoreClass
+         * @param {'pointer'} to Peer name to send to
+         * @param {'uint8'} cmd Command number
+         * @param {'pointer'} data Commands data
+         * @param {'size_t'} data_len Commands data length
+         *
+         * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
+         */
+        'ksnCoreSendCmdto': ['pointer', ['pointer', 'string', 'uint8', 'string', 'size_t']],
+
+        // ksnCoreSendto(kco->kc, rd->addr, rd->port, CMD_ECHO_ANSWER,
+        //          rd->data, rd->data_len);
+        'ksnCoreSendto': ['pointer', ['pointer', 'string', 'int', 'uint8', 'string', 'size_t']],
+
+        // int ksnCommandSendCmdEcho(ksnCommandClass *kco, char *to, void *data,
+        //                    size_t data_len)
+        'ksnCommandSendCmdEcho': ['int', ['pointer', 'string', 'string', 'size_t']],
+
+        /**
+         * Send data to L0 client. Usually it is an answer to request from L0 client
+         *
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {'string'} addr IP address of remote peer
+         * @param {'int'} port Port of remote peer
+         * @param {'string'} cname L0 client name (include trailing zero)
+         * @param {'size_t'} cname_length Length of the L0 client name
+         * @param {'uint8'} cmd Command
+         * @param {'pointer'} data Data
+         * @param {'size_t'} data_len Data length
+         *
+         * @return {'int'} Return 0 if success; -1 if data length is too lage (more than 32319)
+         */
+        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t']]
+    }),
+
     /**
      * Get teonet library version
-     * 
+     *
      * @return {'string'} Teonet library version
      */
-    version: function() { 
-        return this.lib.teoGetLibteonetVersion(); 
+    version: function () {
+        return this.lib.teoGetLibteonetVersion();
     },
-    
+
     /**
      * Set Teonet application type
-     * 
+     *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
      * @param {'string'}  type Application type string
-     */ 
-    setAppType: function(ke, type) {
+     */
+    setAppType: function (ke, type) {
         this.lib.teoSetAppType(ke, type);
     },
-    
+
     /**
-     * Set custom timer interval. The event EV_K_TIMER will be send after 
+     * Set custom timer interval. The event EV_K_TIMER will be send after
      * every time_interval period.
      *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
      * @param {'double'}  time_interval Timer interval
      */
-    setCustomTimer: function(ke, time_interval) {
+    setCustomTimer: function (ke, time_interval) {
         this.lib.ksnetEvMgrSetCustomTimer(ke, time_interval);
     },
-    
+
     /**
      * Send request answer data to Peer or L0 server client (
-     * 
+     *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-     * @param {'pointer'} rd_ptr Pointer to ksnCorePacketData 
+     * @param {'pointer'} rd_ptr Pointer to ksnCorePacketData
      * param {'string'}  name Peer or Client name
      * @param {'uint8'} cmd Comand to send
      * @param {'pointer'} out_data Output data
      * @param {'size_t'} out_data_len Output data length
      * @returns {'int'|'pointer'}
      */
-    sendCmdAnswerTo: function(ke, rd_ptr, cmd, out_data, out_data_len) {
-        
+    sendCmdAnswerTo: function (ke, rd_ptr, cmd, out_data, out_data_len) {
+
         var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
-        
-        if(rd.l0_f) 
-            retavl = this.lib.ksnLNullSendToL0(ke, 
-                rd.addr, rd.port, rd.from, rd.from_len, cmd, 
-                out_data, out_data_len); 
+
+        if (rd.l0_f)
+            retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, out_data_len);
         else {
             //var ke_ptr = new ksnetEvMgrClass(ke);
-            
+
             //retavl = ksnCoreSendCmdto(ke_ptr.kc, name, cmd, // TODO: parse ke.kc
             //    out_data, out_data_len);
-            
+
             // TODO: use this function insted of ksnCoreSendCmdto
-            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd,
-                out_data, out_data_len);
+            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, out_data_len);
         }
-                
+
         return retavl;
     },
-    
+
     /**
      * Send command to peer
      *
@@ -438,14 +435,14 @@ module.exports =  {
      * @param {'uint8'} cmd Command number
      * @param {'pointer'} data Commands data
      * @param {'size_t'} data_len Commands data length
-     * 
+     *
      * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
      */
-    sendCmdTo: function(ke, peer_name, cmd, data, data_len) {
-        
+    sendCmdTo: function (ke, peer_name, cmd, data, data_len) {
+
         return this.lib.ksnCoreSendCmdto(ke.kc, peer_name, cmd, data, data_len);
     },
-    
+
     /**
      * Send Echo command to peer name
      *
@@ -453,40 +450,38 @@ module.exports =  {
      * @param {'pointer'} peer_name Peer name to send to
      * @param {'pointer'} data Commands data
      * @param {'size_t'} data_len Commands data length
-     * 
+     *
      * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
      */
-    sendCmdEchoTo: function(ke, peer_name, data, data_len) {
-        
-        return this.lib.ksnCommandSendCmdEcho(ksnCoreClass(ke.kc).kco, 
-            peer_name, data, data_len);
+    sendCmdEchoTo: function (ke, peer_name, data, data_len) {
+
+        return this.lib.ksnCommandSendCmdEcho(ksnCoreClass(ke.kc).kco, peer_name, data, data_len);
     },
-    
+
     /**
      * Covert javascript callback to C library callback
-     * 
+     *
      * @param {type} eventCb
      * @returns {nm$_ffi.exports.Callback}
      */
-    eventCbPtr: function(eventCb) {
+    eventCbPtr: function (eventCb) {
 
         var cb = ffi.Callback('void', [ksnetEvMgrClassPtr, 'int', ksnCorePacketDataPtr, 'size_t', 'pointer'],
             //eventCb
-            function(ke_ptr, ev, data, data_len, user_dat) {
-                //var ke = new ksnetEvMgrClass(ke_ptr);
+            function (ke_ptr, ev, data, data_len, user_dat) {
                 eventCb(ksnetEvMgrClass(ke_ptr), ev, data, data_len, user_dat);
             }
         );
 
         // hack for node-ffi
         // see: https://github.com/rbranson/node-ffi/issues/72
-        process.on('exit', function() {
+        process.on('exit', function () {
             cb;
         });
 
         return cb;
     },
-    
+
     /**
      * Initialize KSNet Event Manager and network
      *
@@ -494,29 +489,31 @@ module.exports =  {
      * @param {int}       options Options set: <br>
      *                      READ_OPTIONS #1 - read options from command line parameters; <br>
      *                      READ_CONFIGURATION #2 - read options from configuration file
-     * 
+     *
      * @return Pointer to created ksnetEvMgrClass
-     */    
-    init: function(eventCb, options) {
-        return this.lib.ksnetEvMgrInit(process.argv.length-1, process.argv.slice(1), this.eventCbPtr(eventCb), options);
+     */
+    init: function (eventCb, options) {
+        return this.lib.ksnetEvMgrInit(process.argv.length - 1, process.argv.slice(1), this.eventCbPtr(eventCb), options);
     },
-    
+
     /**
      * Start KSNet Event Manager and network communication
      *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
      * @return {'int'} Alway return 0
-     */ 
-    run: function(ke) {
-        
+     */
+    run: function (ke) {
+
         var self = this;
-        
+
         // Start teonet
-        //teonet.lib.ksnetEvMgrRun(ke); // Start without async
         return self.lib.ksnetEvMgrRun.async(ke, function (err, res) {
-            if (err) throw err;
+            if (err) {
+                throw err;
+            }
+
             console.log("Teonet exited, res: " + res + " ...");
         });
     }
-    
-  };
+
+};
