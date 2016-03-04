@@ -6,7 +6,7 @@ https://github.com/node-ffi/node-ffi/wiki/Node-FFI-Tutorial
 
 ### Install teonet library under Linux
 
-To install Teonet library see the Install [Teonet library from repository](lib/README.md) readme file
+To install Teonet library see the Install [Teonet library from repository](docs/InstallTeonet.md) readme file
 
 
 ### Teonet developer documentation:  
