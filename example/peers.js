@@ -74,6 +74,8 @@ teoMain();
  * @returns {void}
  */
 function teoEventCb(ke, ev, data, data_len, user_data) {
+    let rd;
+    
     switch (ev) {
 
         // EV_K_STARTED #0 Calls immediately after event manager starts
@@ -84,7 +86,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
         // EV_K_CONNECTED #3 New peer connected to host event
         case teonet.ev.EV_K_CONNECTED:
-            var rd = new teonet.packetData(data);
+            rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" connected');
 
             teonet.sendCmdTo(_ke, rd.from, teoApi.CMD_PEERS, 'JSON');
@@ -94,7 +96,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
         // EV_K_DISCONNECTED #4 A peer was disconnected from host
         case teonet.ev.EV_K_DISCONNECTED:
-            var rd = new teonet.packetData(data);
+            rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" disconnected'/*, arguments*/);
 
             delete peers[rd.from];
@@ -102,7 +104,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
         // EV_K_RECEIVED #5 This host Received a data    
         case teonet.ev.EV_K_RECEIVED:
-            var rd = new teonet.packetData(data);
+            rd = new teonet.packetData(data);
 
             // Command    
             switch (rd.cmd) {
