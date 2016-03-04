@@ -147,6 +147,7 @@ let pingIntervalId = setInterval(() => {
             // send hard reset
             teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1');
             console.log('HARD RESET', name, peers[name]);
+            peers[name] = 0;
         }
 
 
