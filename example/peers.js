@@ -87,7 +87,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             var rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" connected');
 
-            teonet.sendCmdTo(_ke, rd.from, teoApi.CMD_PEERS, 'JSON', 4);
+            teonet.sendCmdTo(_ke, rd.from, teoApi.CMD_PEERS, 'JSON');
 
             peers[rd.from] = 0;
             break;
@@ -131,7 +131,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             clearInterval(getPeersTablesIntervalId);
             break;
         default:
-            break
+            break;
     }
 }
 
@@ -149,11 +149,11 @@ let pingIntervalId = setInterval(() => {
         // soft reset after 5 seconds (5 missed pings) and hard reset after 10
         if (peers[name] >= 5 && peers[name] < 10) {
             // send soft reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null, 0);
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null);
             console.log('SOFT RESET', name, peers[name]);
         } else if (peers[name] >= 10) {
             // send hard reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1', 1);
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1');
             console.log('HARD RESET', name, peers[name]);
         }
 
@@ -162,7 +162,7 @@ let pingIntervalId = setInterval(() => {
             deadCnt++;
         }
 
-        teonet.sendCmdEchoTo(_ke, name, null, 0);
+        teonet.sendCmdEchoTo(_ke, name, null);
         peers[name] = (peers[name] || 0 ) + 1;
     }
 
@@ -175,7 +175,7 @@ let pingIntervalId = setInterval(() => {
 
 let getPeersTablesIntervalId = setInterval(() => {
     //for (let name in peers) {
-    //    teonet.sendCmdTo(_ke, name, teoApi.CMD_PEERS, null, 0);
+    //    teonet.sendCmdTo(_ke, name, teoApi.CMD_PEERS, null);
     //}
 });
 

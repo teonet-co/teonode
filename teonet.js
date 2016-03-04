@@ -150,6 +150,10 @@ var ksnetEvMgrClass = StructType({
 });
 var ksnetEvMgrClassPtr = ref.refType(ksnetEvMgrClass);
 
+function getLength(data) {
+    return data ? data.length : 0;
+}
+
 
 //module.exports = ffi.Library('/home/kirill/Projects/teonet/src/.libs/libteonet', {
 module.exports = {
@@ -404,16 +408,16 @@ module.exports = {
      * param {'string'}  name Peer or Client name
      * @param {'uint8'} cmd Comand to send
      * @param {'pointer'} out_data Output data
-     * @param {'size_t'} out_data_len Output data length
      * @returns {'int'|'pointer'}
      */
-    sendCmdAnswerTo: function (ke, rd_ptr, cmd, out_data, out_data_len) {
+    sendCmdAnswerTo: function (ke, rd_ptr, cmd, out_data) {
 
         var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
 
-        if (rd.l0_f)
-            retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, out_data_len);
+        if (rd.l0_f) {
+            retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
+        }
         else {
             //var ke_ptr = new ksnetEvMgrClass(ke);
 
@@ -421,7 +425,7 @@ module.exports = {
             //    out_data, out_data_len);
 
             // TODO: use this function insted of ksnCoreSendCmdto
-            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, out_data_len);
+            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
         }
 
         return retavl;
@@ -434,13 +438,12 @@ module.exports = {
      * @param {'pointer'} peer_name Peer name to send to
      * @param {'uint8'} cmd Command number
      * @param {'pointer'} data Commands data
-     * @param {'size_t'} data_len Commands data length
      *
      * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
      */
-    sendCmdTo: function (ke, peer_name, cmd, data, data_len) {
+    sendCmdTo: function (ke, peer_name, cmd, data) {
 
-        return this.lib.ksnCoreSendCmdto(ke.kc, peer_name, cmd, data, data_len);
+        return this.lib.ksnCoreSendCmdto(ke.kc, peer_name, cmd, data, getLength(data));
     },
 
     /**
@@ -453,9 +456,9 @@ module.exports = {
      *
      * @return {'pointer'} Pointer to ksnet_arp_data or null if "to" peer is absent
      */
-    sendCmdEchoTo: function (ke, peer_name, data, data_len) {
+    sendCmdEchoTo: function (ke, peer_name, data) {
 
-        return this.lib.ksnCommandSendCmdEcho(ksnCoreClass(ke.kc).kco, peer_name, data, data_len);
+        return this.lib.ksnCommandSendCmdEcho(ksnCoreClass(ke.kc).kco, peer_name, data, getLength(data));
     },
 
     /**

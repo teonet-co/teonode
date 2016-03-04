@@ -131,8 +131,8 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             peers[rd.from].echoCount = 0; // echo count for connected peer
 
 
-            teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_HOST_INFO, 'JSON', 4);
-            teonet.sendCmdAnswerTo(ke, rd, teoApi.PEERS, 'JSON', 4);
+            teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_HOST_INFO, 'JSON');
+            teonet.sendCmdAnswerTo(ke, rd, teoApi.PEERS, 'JSON');
 
             break;
 
@@ -159,7 +159,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                 case teoApi.CMD_N_HELLO:
                     var data_out = "Hello";
                     console.log('Send CMD_N_HELLO:', data_out, 'to', rd.from);
-                    teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_N_HELLO_ANSWER, data_out, data_out.length);
+                    teonet.sendCmdAnswerTo(ke, rd, teoApi.CMD_N_HELLO_ANSWER, data_out);
                     break;
 
                 case teoApi.CMD_N_HELLO_ANSWER:
@@ -274,11 +274,11 @@ let pingIntervalId = setInterval(() => {
         // soft reset after 5 seconds (5 missed pings) and hard reset after 10
         if (peers[name].echoCount >= 5 && peers[name].echoCount < 10) {
             // send soft reset
-            //teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null, 0); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //console.log('SOFT RESET', name, peers[name].echoCount);
         } else if (peers[name].echoCount >= 10) {
             // send hard reset
-            //teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1', 1); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1'); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             //console.log('HARD RESET', name, peers[name].echoCount);
         }
         //ALL DEAD (1), RESTART ITSELF
@@ -288,7 +288,7 @@ let pingIntervalId = setInterval(() => {
             deadCnt++;
         }
 
-        //teonet.sendCmdEchoTo(_ke, name, 'ping', 4); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //teonet.sendCmdEchoTo(_ke, name, 'ping'); //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         peers[name].echoCount = (peers[name].echoCount || 0 ) + 1;
     }
 

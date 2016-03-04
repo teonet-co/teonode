@@ -139,11 +139,11 @@ let pingIntervalId = setInterval(() => {
         // soft reset after 5 seconds (5 missed pings) and hard reset after 10
         if (peers[name] >= 5 && peers[name] < 10) {
             // send soft reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null, 0);
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null);
             console.log('SOFT RESET', name, peers[name]);
         } else if (peers[name] >= 10) {
             // send hard reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1', 1);
+            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1');
             console.log('HARD RESET', name, peers[name]);
         }
 
@@ -152,7 +152,7 @@ let pingIntervalId = setInterval(() => {
             deadCnt++;
         }
 
-        teonet.sendCmdEchoTo(_ke, name, null, 0);
+        teonet.sendCmdEchoTo(_ke, name, null);
         peers[name] = (peers[name] || 0 ) + 1;
     }
 

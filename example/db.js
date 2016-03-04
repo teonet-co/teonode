@@ -101,13 +101,13 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             if (rd.from === db) {
                 console.log('CMD_D_SET');
                 let a = 'JSON: ' + JSON.stringify({namespace: 'namespace1', key: 'a.a.', data: 'hello', data_len: 5});
-                teonet.sendCmdTo(_ke, db, teoApi.CMD_D_SET, a, a.length);
+                teonet.sendCmdTo(_ke, db, teoApi.CMD_D_SET, a);
 
                 setTimeout(()=> {
                     console.log('CMD_D_LIST');
 
                     let a = 'JSON: ' + JSON.stringify({ID: '*', namespace: 'namespace1'});
-                    teonet.sendCmdTo(_ke, db, teoApi.CMD_D_LIST, a, a.length);
+                    teonet.sendCmdTo(_ke, db, teoApi.CMD_D_LIST, a);
                 }, 100);
             }
 
@@ -136,7 +136,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     console.log('Got CMD_D_LIST_ANSWER:', rd.data, 'from:', rd.from);
 
                     let a = 'JSON: ' + JSON.stringify({ID: '*', namespace: 'namespace1', key: 'a.a.'});
-                    teonet.sendCmdTo(_ke, db, teoApi.CMD_D_GET, a, a.length);
+                    teonet.sendCmdTo(_ke, db, teoApi.CMD_D_GET, a);
 
                     break;
 
