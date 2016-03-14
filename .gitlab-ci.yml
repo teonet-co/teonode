@@ -9,7 +9,6 @@ build_teonet_image:
   tags:
       - docker_image_build
   script:
-    - cd ci-build-data
     - docker build --no-cache -t gitlab.ksproject.org:5000/teonet/teonode -f docker/Dockerfile .
     - docker push gitlab.ksproject.org:5000/teonet/teonode
   only:
