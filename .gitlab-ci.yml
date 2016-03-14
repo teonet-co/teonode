@@ -1,0 +1,17 @@
+# version 0.0.1
+
+types:
+  - deploy
+
+# Build teonet docker image and upload it to Docker HUB
+build_teonet_image:
+  type: deploy
+  tags:
+      - docker_image_build
+  script:
+    - cd ci-build-data
+    - docker build --no-cache -t gitlab.ksproject.org:5000/teonet/teonode -f docker/Dockerfile .
+    - docker push gitlab.ksproject.org:5000/teonet/teonode
+  only:
+    - tags  
+
