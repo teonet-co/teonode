@@ -326,6 +326,14 @@ module.exports = {
         'teoSetAppType': ['void', ['pointer', 'string']],
 
         /**
+         * Set Teonet application version
+         *
+         * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+         * @param {'string'}  type Application version string
+         */
+        'teoSetAppVersion': ['void', ['pointer', 'string']],
+
+        /**
          * Get Teonet event manager time
          *
          * @return Teonet event manager time
@@ -387,6 +395,16 @@ module.exports = {
      */
     setAppType: function (ke, type) {
         this.lib.teoSetAppType(ke, type);
+    },
+
+    /**
+     * Set Teonet application version
+     *
+     * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+     * @param {'string'}  version Application version string
+     */
+    setAppVersion: function (ke, version) {
+        this.lib.teoSetAppVersion(ke, version);
     },
 
     /**
