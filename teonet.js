@@ -236,6 +236,11 @@ module.exports = {
         EV_K_RECEIVED: 5,      ///< #5  This host Received a data
 
         /**
+         * Reset command, data: byte or char 0 - soft reset; 1 - hard reset
+         */
+        CMD_RESET: 8,
+
+        /**
          * #9 Timer event, seted by ksnetEvMgrSetCustomTimer
          *
          * @param {'pointer'} ke Pointer to ksnetEvMgrClass

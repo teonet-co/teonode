@@ -35,7 +35,6 @@ var teonet = require('../../teonet');
  * This application API commands
  */
 var teoApi = {
-    CMD_RESET: 8, // Reset command, data: byte or char 0 - soft reset; 1 - hard reset
     CMD_ECHO_ANSWER: 66
 };
 
@@ -141,11 +140,11 @@ let pingIntervalId = setInterval(() => {
         // soft reset after 5 seconds (5 missed pings) and hard reset after 10
         if (peers[name] >= 5 && peers[name] < 10) {
             // send soft reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, null);
+            teonet.sendCmdTo(_ke, name, teonet.ev.CMD_RESET, null);
             console.log('SOFT RESET', name, peers[name]);
         } else if (peers[name] >= 10) {
             // send hard reset
-            teonet.sendCmdTo(_ke, name, teoApi.CMD_RESET, '1');
+            teonet.sendCmdTo(_ke, name, teonet.ev.CMD_RESET, '1');
             console.log('HARD RESET', name, peers[name]);
             peers[name] = 0;
         }
@@ -180,7 +179,7 @@ function teoMain() {
     teonet.setAppType(ke, "teo-node");
 
     // Set application version
-    teonet.setAppVersion(ke, '0.1.0');
+    teonet.setAppVersion(ke, '0.1.1');
 
     // Start Timer event 
     teonet.setCustomTimer(ke, 5.000);
