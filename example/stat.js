@@ -31,7 +31,7 @@
 
 var ref = require('ref');
 var Table = require('cli-table');
-var teonet = require('../../teonet');
+var teonet = require('../teonet');
 
 
 /**
