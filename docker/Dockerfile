@@ -3,13 +3,13 @@
 FROM gitlab.ksproject.org:5000/teonet/teonet
 MAINTAINER Tereshchenko Vladimir <vdtereshchenko@gmail.com>
 
-# Add filebeat install script
+# Add install script
 ADD docker/teonode_install.sh /root/
 
 # Copy project
 ADD . /root/Projects/teonode/
 
-# Install filebeat
+# Install
 WORKDIR /root/
 RUN ./teonode_install.sh
 RUN rm ./teonode_install.sh
