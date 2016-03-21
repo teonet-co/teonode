@@ -15,8 +15,11 @@
   "author": "Kirill Scherba <kirill@scherba.ru> (http://gitlab.ksproject.org/)",
   "contributors": [],
   "dependencies": {
+    "ain2": "^1.5.3",
     "cli-table": "^0.3.1",
     "ffi": "^2.0.0",
+    "mysql2": "^0.15.8",
+    "nconf": "^0.8.4",
     "ref": "^1.3.2",
     "ref-array": "^1.1.2",
     "ref-struct": "^1.0.2"
