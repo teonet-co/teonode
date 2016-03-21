@@ -129,6 +129,8 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_USER:
             break;
         case teonet.ev.EV_K_STOPPED:
+            console.log('EV_K_STOPPED');
+            db.pool.end();
             break;
         default:
             break;

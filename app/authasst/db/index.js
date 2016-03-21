@@ -3,7 +3,7 @@ var config = require("../libs/config");
 
 var sqlPool = mysql.createPool(config.get('mysql'));
 
-//module.exports.pool = sqlPool;
+module.exports.pool = sqlPool;
 
 
 var query = {};
