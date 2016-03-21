@@ -526,9 +526,10 @@ module.exports = {
      * Start KSNet Event Manager and network communication
      *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
+     * @param {function} cb callback for async ffi_call
      * @return {'int'} Alway return 0
      */
-    run: function (ke) {
+    run: function (ke, cb) {
 
         var self = this;
 
@@ -539,7 +540,10 @@ module.exports = {
             }
 
             console.log("Teonet exited, res: " + res + " ...");
+
+            if (typeof cb === 'function') {
+                cb();
+            }
         });
     }
-
 };
