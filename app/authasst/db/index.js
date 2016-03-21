@@ -1,4 +1,3 @@
-var async = require('async');
 var mysql = require('mysql2');
 var config = require("../libs/config");
 
