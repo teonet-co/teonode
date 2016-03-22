@@ -380,7 +380,9 @@ module.exports = {
          *
          * @return {'int'} Return 0 if success; -1 if data length is too lage (more than 32319)
          */
-        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t']]
+        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t']],
+
+        'syslog': ['void', ['int', 'string']]
     }),
 
     /**
@@ -545,5 +547,36 @@ module.exports = {
                 cb();
             }
         });
+    },
+
+
+    /**
+     * Get object for logging to syslog
+     *
+     * Example of usage:
+     * var log = teonet.syslog('teonede', module.filename);
+     * log.message('___test1___');
+     *
+     * Example of log record from native library:
+     * teonet:teonode[15]: MESSAGE event_manager:ksnetEvMgrRun:(ev_mgr.c:259): started ...
+     *
+     * @param {string} moduleName - name of module
+     * @param {string} modulePath - file name or full path to file via module.filename (recommended)
+     * @return {{message: message, error: error, debug: debug}}
+     */
+    syslog: function (moduleName, modulePath) {
+        var self = this;
+
+        return {
+            message: function (msg) {
+                self.lib.syslog(8, 'teonode[' + process.pid + ']: MESSAGE ' + moduleName + '::(' + modulePath + ':): ' + msg);
+            },
+            error: function (err, msg) {
+                self.lib.syslog(8, 'teonode[' + process.pid + ']: ERROR_M ' + moduleName + '::(' + modulePath + ':): ' + (msg ? msg + '; ' : '') + err.stack);
+            },
+            debug: function (msg) {
+                self.lib.syslog(8, 'teonode[' + process.pid + ']: DEBUG ' + moduleName + '::(' + modulePath + ':): ' + msg);
+            }
+        };
     }
 };
