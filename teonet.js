@@ -569,13 +569,16 @@ module.exports = {
 
         return {
             message: function (msg) {
-                self.lib.syslog(8, 'teonode[' + process.pid + ']: MESSAGE ' + moduleName + '::(' + modulePath + ':): ' + msg);
+                /* LOG_NOTICE normal but significant condition */
+                self.lib.syslog(5, 'MESSAGE ' + moduleName + '::(' + modulePath + ':): ' + msg);
             },
             error: function (err, msg) {
-                self.lib.syslog(8, 'teonode[' + process.pid + ']: ERROR_M ' + moduleName + '::(' + modulePath + ':): ' + (msg ? msg + '; ' : '') + err.stack);
+                /* LOG_ERR error conditions */
+                self.lib.syslog(3, 'ERROR_M ' + moduleName + '::(' + modulePath + ':): ' + (msg ? msg + '; ' : '') + err.stack);
             },
             debug: function (msg) {
-                self.lib.syslog(8, 'teonode[' + process.pid + ']: DEBUG ' + moduleName + '::(' + modulePath + ':): ' + msg);
+                /* LOG_INFO informational */
+                self.lib.syslog(6, 'DEBUG ' + moduleName + '::(' + modulePath + ':): ' + msg);
             }
         };
     }
