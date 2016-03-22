@@ -154,7 +154,7 @@ function teoMain() {
     teonet.setAppType(ke, "teo-node");
 
     // Set application version
-    teonet.setAppVersion(ke, '0.0.1');
+    teonet.setAppVersion(ke, '0.0.2');
 
     // Start Timer event
     teonet.setCustomTimer(ke, 5.000);
