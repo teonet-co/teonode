@@ -24,17 +24,14 @@
 
 'use strict';
 
-/**
- * Declare Teonet library module
- * @type Module teonet|Module teonet
- */
-var teonet = require('../../teonet');
 
+const teonet = require('../../teonet');
+const logger = teonet.syslog('watch', module.filename);
 
 /**
  * This application API commands
  */
-var teoApi = {
+const teoApi = {
     CMD_ECHO_ANSWER: 66
 };
 
@@ -141,10 +138,12 @@ let pingIntervalId = setInterval(() => {
         if (peers[name] >= 5 && peers[name] < 10) {
             // send soft reset
             teonet.sendCmdTo(_ke, name, teonet.ev.CMD_RESET, null);
+            logger.message('SOFT RESET ' + name + ' ' + peers[name]);
             console.log('SOFT RESET', name, peers[name]);
         } else if (peers[name] >= 10) {
             // send hard reset
             teonet.sendCmdTo(_ke, name, teonet.ev.CMD_RESET, '1');
+            logger.message('HARD RESET ' + name + ' ' + peers[name]);
             console.log('HARD RESET', name, peers[name]);
             peers[name] = 0;
         }
@@ -159,6 +158,7 @@ let pingIntervalId = setInterval(() => {
     }
 
     if (cnt > 0 && cnt === deadCnt) {
+        logger.message('ALL DEAD (' + deadCnt + '), RESTART YOURSELF');
         console.log('ALL DEAD (%d), RESTART YOURSELF', deadCnt);
         process.kill(process.pid, 'SIGUSR2'); // kill yourself
     }

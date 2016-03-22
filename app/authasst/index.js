@@ -24,8 +24,9 @@
 
 'use strict';
 
-const logger = require('ain2').getInstance();
+
 const teonet = require('../../teonet');
+const logger = teonet.syslog('authasst', module.filename);
 const db = require('./db');
 
 /**
@@ -109,6 +110,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     let from = rd.from; // using rd in callback throw Segmentation fault
                     db.checkUser(rd.data, function (err, _data) {
                         if (err) {
+                            logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
                             teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({error: err.message}));
                             return;
