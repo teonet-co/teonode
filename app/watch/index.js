@@ -43,8 +43,6 @@ var peers = Object.create(null);
 // Application welcome message
 console.log("Teonode ver. 0.0.1, based on teonet ver. " + teonet.version());
 
-// Start teonet module
-teoMain();
 
 /**
  * Teonet event callback
@@ -165,28 +163,4 @@ let pingIntervalId = setInterval(() => {
 }, 1000);
 
 
-/**
- * Initialize and start Teonet
- *
- * @returns {undefined}
- */
-function teoMain() {
-
-    // Initialize teonet event manager and Read configuration
-    var ke = teonet.init(teoEventCb, 3);
-
-    // Set application type
-    teonet.setAppType(ke, "teo-node");
-
-    // Set application version
-    teonet.setAppVersion(ke, '0.1.2');
-
-    // Start Timer event 
-    teonet.setCustomTimer(ke, 5.000);
-
-    // Start teonet
-    teonet.run(ke);
-
-    // Show exit message
-    console.log("Teonode application initialization finished ...");
-}
+teonet.start('teo-node', '0.1.2', 3, 5, teoEventCb);

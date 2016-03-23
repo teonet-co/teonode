@@ -51,8 +51,6 @@ var _ke; // right pointer to ksnetEvMgrClass
 // Application welcome message
 console.log("Teonode application based on teonet ver. " + teonet.version());
 
-// Start teonet module
-teoMain();
 
 /**
  * Teonet event callback
@@ -102,7 +100,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
 
-            console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
+            // console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
             // Command
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
@@ -140,28 +138,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-/**
- * Initialize and start Teonet
- *
- * @returns {undefined}
- */
-function teoMain() {
-
-    // Initialize teonet event manager and Read configuration
-    var ke = teonet.init(teoEventCb, 3);
-
-    // Set application type
-    teonet.setAppType(ke, "teo-node");
-
-    // Set application version
-    teonet.setAppVersion(ke, '0.0.2');
-
-    // Start Timer event
-    teonet.setCustomTimer(ke, 5.000);
-
-    // Start teonet
-    teonet.run(ke);
-
-    // Show exit message
-    console.log("Teonode application initialization finished ...");
-}
+teonet.start('teo-node', '0.0.2', 3, 5, teoEventCb);

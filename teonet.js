@@ -517,6 +517,8 @@ module.exports = {
      * @param {int}       options Options set: <br>
      *                      READ_OPTIONS #1 - read options from command line parameters; <br>
      *                      READ_CONFIGURATION #2 - read options from configuration file
+     *                      READ_ALL
+     *                      APP_PARAM
      *
      * @return Pointer to created ksnetEvMgrClass
      */
@@ -551,6 +553,32 @@ module.exports = {
 
 
     /**
+     * Initialize and start Teonet
+     * @param {string} appType
+     * @param {string} appVersion
+     * @param {number} initOptionsNumber
+     * @param {number} eventInterval
+     * @param {function} teoEventCb
+     * @param {function} [ffiAsyncCb] - cb callback for async ffi_call
+     */
+    start: function(appType, appVersion, initOptionsNumber, eventInterval, teoEventCb, ffiAsyncCb){
+        // Initialize teonet event manager and Read configuration
+        var ke = this.init(teoEventCb, initOptionsNumber);
+
+        // Set application type
+        this.setAppType(ke, appType);
+
+        // Set application version
+        this.setAppVersion(ke, appVersion);
+
+        // Start Timer event
+        this.setCustomTimer(ke, eventInterval);
+
+        // Start teonet
+        this.run(ke, ffiAsyncCb);
+    },
+
+    /**
      * Get object for logging to syslog
      *
      * Example of usage:
@@ -564,6 +592,8 @@ module.exports = {
      * @param {string} modulePath - file name or full path to file via module.filename (recommended)
      * @return {{message: message, error: error, debug: debug}}
      */
+
+
     syslog: function (moduleName, modulePath) {
         var self = this;
 
