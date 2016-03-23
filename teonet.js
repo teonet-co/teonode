@@ -502,7 +502,7 @@ module.exports = {
         );
 
         // hack for node-ffi
-        // see: https://github.com/rbranson/node-ffi/issues/72
+        // see: https://github.com/node-ffi/node-ffi/issues/72
         process.on('exit', function () {
             cb;
         });
@@ -561,7 +561,7 @@ module.exports = {
      * @param {function} teoEventCb
      * @param {function} [ffiAsyncCb] - cb callback for async ffi_call
      */
-    start: function(appType, appVersion, initOptionsNumber, eventInterval, teoEventCb, ffiAsyncCb){
+    start: function (appType, appVersion, initOptionsNumber, eventInterval, teoEventCb, ffiAsyncCb) {
         // Initialize teonet event manager and Read configuration
         var ke = this.init(teoEventCb, initOptionsNumber);
 
@@ -578,6 +578,7 @@ module.exports = {
         this.run(ke, ffiAsyncCb);
     },
 
+    
     /**
      * Get object for logging to syslog
      *
@@ -592,8 +593,6 @@ module.exports = {
      * @param {string} modulePath - file name or full path to file via module.filename (recommended)
      * @return {{message: message, error: error, debug: debug}}
      */
-
-
     syslog: function (moduleName, modulePath) {
         var self = this;
 

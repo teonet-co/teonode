@@ -31,22 +31,14 @@ console.log("Teonode application based on teonet ver. " + teonet.version());
 /**
  * Teonet event callback
  *
- * Original C function parameters:
+ * Original C function parameters: 
+ * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data)
  *
- * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data,
- *              size_t data_len, void *user_data)
- *
- * *note: https://github.com/node-ffi/node-ffi/issues/72
- *
- * @param {pointer} ke Pointer to ksnetEvMgrClass,
- *     see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
- * @param {int} ev Teonet event number,
- *     see the http://repo.ksproject.org/docs/teonet/ev__mgr_8h.html#ad7b9bff24cb809ad64c305b3ec3a21fe
+ * @param {pointer} ke Pointer to ksnetEvMgrClass, see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
+ * @param {int} ev Teonet event number, see the http://repo.ksproject.org/docs/teonet/ev__mgr_8h.html#ad7b9bff24cb809ad64c305b3ec3a21fe
  * @param {pointer} data Binary or string (depended on event) data
  * @param {int} data_len Data length
  * @param {pointer} user_data Additional poiner to User data
- *
- * @returns {void}
  */
 function teoEventCb(ke, ev, data, data_len, user_data) {
     let rd;
