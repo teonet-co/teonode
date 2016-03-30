@@ -82,7 +82,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             break;
 
         case teonet.ev.EV_K_STOPPED:
-            clearInterval(pingIntervalId);
             break;
         default:
             break;
@@ -129,6 +128,7 @@ let pingIntervalId = setInterval(() => {
         process.kill(process.pid, 'SIGUSR2'); // kill yourself
     }
 }, 1000);
+pingIntervalId.unref();
 
 
 teonet.start('teo-node', '0.1.2', 3, 5, teoEventCb);
