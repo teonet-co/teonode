@@ -68,7 +68,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
 
-            // console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
+            console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
             // Command
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
@@ -106,4 +106,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.4', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.5', 3, 5, teoEventCb);
