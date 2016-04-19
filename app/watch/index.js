@@ -8,7 +8,9 @@ const logger = teonet.syslog('watch', module.filename);
  * This application API commands
  */
 const teoApi = {
-    CMD_ECHO_ANSWER: 66
+    CMD_ECHO_ANSWER: 66,
+    PEERS: 72,              ///< #72 Get peers
+    PEERS_ANSWER: 73        ///< #73 Get peers answer
 };
 
 
@@ -48,6 +50,11 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             rd = new teonet.packetData(data);
             console.log('Peer "' + rd.from + '" connected');
             peers[rd.from] = 0;
+
+            var from = rd.from;
+            setTimeout(()=> {
+                teonet.sendCmdTo(_ke, from, teoApi.PEERS, 'JSON');
+            }, 300);
             break;
 
         // EV_K_DISCONNECTED #4 A peer was disconnected from host
@@ -68,6 +75,10 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     peers[rd.from] = 0;
                     break;
 
+                case teoApi.PEERS_ANSWER:
+                    checkPeersList(rd.from, JSON.parse(rd.data).arp_data_ar);
+                    break;
+
                 default:
                     break;
             }
@@ -85,6 +96,18 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             break;
         default:
             break;
+    }
+}
+
+// TODO check peers list from rd.from
+function checkPeersList(name, list) {
+    // console.log(name, list, peers);
+    for (let peer of list) {
+        if (peer.mode === -1 || peer.name === process.argv[2]) {
+            continue;
+        }
+
+        console.log(peer);
     }
 }
 
