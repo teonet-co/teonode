@@ -81,7 +81,13 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         }
 
                         if (_data) {
-                            teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
+//                            if(rd.l0_f)
+//                                teonet.ksnLNullSendToL0(_ke,
+//                                    rd.addr, rd.port, from, teoApi.CMD_CHECK_USER_ANSWER,
+//                                    JSON.stringify(_data));
+//                            else
+//                                teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
+                            teonet.sendCmdAnswerTo(_ke, rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
                         } else {
                             teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, null);
                         }
