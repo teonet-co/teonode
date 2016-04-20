@@ -437,27 +437,27 @@ module.exports = {
      */
     sendCmdAnswerTo: function (ke, rd, cmd, out_data) {
 
-        //var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
 
         if (rd.l0_f) {
             retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
         }
         else {
-            //var ke_ptr = new ksnetEvMgrClass(ke);
-
-            //retavl = ksnCoreSendCmdto(ke_ptr.kc, name, cmd, // TODO: parse ke.kc
-            //    out_data, out_data_len);
-
-            // TODO: use this function insted of ksnCoreSendCmdto
-            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
+            retavl = this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
         }
 
         return retavl;
     },
     
+    /**
+     * Clone an object
+     * 
+     * @param {type} obj
+     * @returns {unresolved}
+     */
     cloneObject: function(obj) {
-        return JSON.parse(JSON.stringify(obj));
+        //return JSON.parse(JSON.stringify(obj));
+        return Object.assign({}, obj);
     }, 
 
     /**
