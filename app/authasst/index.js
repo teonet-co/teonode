@@ -67,7 +67,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         // EV_K_RECEIVED #5 This host Received a data
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
-            _rd = cloneObject(rd);
+            _rd = teonet.cloneObject(rd);
 
             // Command
             switch (rd.cmd) {
