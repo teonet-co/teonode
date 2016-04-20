@@ -48,7 +48,9 @@ group by
 
 
 module.exports.checkUser = function (accessToken, done) {
+    console.log(config.get('mysql'));
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
+        console.log('checkUser', err, rows);
         if (err) {
             done(err);
             return;

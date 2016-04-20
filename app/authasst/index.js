@@ -68,10 +68,11 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
 
-            console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
             // Command
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
+                    console.log('rd.cmd:' + rd.cmd, '; rd.from: ' + rd.from, '; data: ' + rd.data);
+
 
                     let from = rd.from; // using rd in callback throw Segmentation fault
                     db.checkUser(rd.data, function (err, _data) {
