@@ -429,13 +429,13 @@ module.exports = {
      * Send request answer data to Peer or L0 server client (
      *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-     * @param {type} rd_ptr Pointer to ksnCorePacketData
+     * @param {'pointer'|object} rd Pointer to ksnCorePacketData
      * param {'string'}  name Peer or Client name
      * @param {'uint8'} cmd Comand to send
      * @param {'pointer'} out_data Output data
      * @returns {'int'|'pointer'}
      */
-    sendCmdAnswerTo: function (ke, rd /*rd_ptr*/, cmd, out_data) {
+    sendCmdAnswerTo: function (ke, rd, cmd, out_data) {
 
         //var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
@@ -455,6 +455,10 @@ module.exports = {
 
         return retavl;
     },
+    
+    cloneObject: function(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    } 
 
     /**
      * Send command to peer

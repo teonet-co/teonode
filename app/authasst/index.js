@@ -67,6 +67,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         // EV_K_RECEIVED #5 This host Received a data
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
+            _rd = cloneObject(rd);
 
             // Command
             switch (rd.cmd) {
@@ -88,7 +89,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 //                                    JSON.stringify(_data));
 //                            else
 //                                teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
-                            teonet.sendCmdAnswerTo(_ke, rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
                         } else {
                             teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, null);
                         }
