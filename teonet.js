@@ -456,8 +456,8 @@ module.exports = {
      * @returns {unresolved}
      */
     cloneObject: function(obj) {
-        //return JSON.parse(JSON.stringify(obj));
-        return Object.assign({}, obj);
+        return JSON.parse(JSON.stringify(obj));
+        //return Object.assign({}, obj);
     }, 
 
     /**
