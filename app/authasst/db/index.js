@@ -25,16 +25,16 @@ from accessTokens ac
 		on ac.clientId = c.clientId
 */
 
-	inner join userGroup ug
+	left join userGroup ug
 		on ac.userId = ug.userId
-	inner join groups g
+	left join groups g
 		on ug.groupId = g.groupId
 
 
 where
 	ac.token = ?
 	and u.deactivated is null
---	and ac.expirationDate > NOW()
+	and ac.expirationDate > NOW()
 
 
 group by
@@ -48,9 +48,7 @@ group by
 
 
 module.exports.checkUser = function (accessToken, done) {
-    console.log(config.get('mysql'));
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
-        console.log('checkUser', err, rows);
         if (err) {
             done(err);
             return;
