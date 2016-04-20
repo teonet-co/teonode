@@ -438,6 +438,8 @@ module.exports = {
     sendCmdAnswerTo: function (ke, rd, cmd, out_data) {
 
         var retavl;
+        
+        console.log("sendCmdAnswerTo", ke, rd, cmd, out_data );
 
         if (rd.l0_f) {
             retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
