@@ -458,7 +458,7 @@ module.exports = {
     
     cloneObject: function(obj) {
         return JSON.parse(JSON.stringify(obj));
-    } 
+    }, 
 
     /**
      * Send command to peer
