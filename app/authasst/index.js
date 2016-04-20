@@ -72,6 +72,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
                     let from = rd.from; // using rd in callback throw Segmentation fault
+                    let _rd = rd;
                     db.checkUser(rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
@@ -87,7 +88,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 //                                    JSON.stringify(_data));
 //                            else
 //                                teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
-                            teonet.sendCmdAnswerTo(_ke, rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
                         } else {
                             teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, null);
                         }
