@@ -375,12 +375,12 @@ module.exports = {
          * @param {'string'} cname L0 client name (include trailing zero)
          * @param {'size_t'} cname_length Length of the L0 client name
          * @param {'uint8'} cmd Command
-         * @param {'pointer'} data Data
+         * @param {'string'} data Data
          * @param {'size_t'} data_len Data length
          *
          * @return {'int'} Return 0 if success; -1 if data length is too lage (more than 32319)
          */
-        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t']],
+        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'string', 'size_t']],
 
         'syslog': ['void', ['int', 'string']]
     }),
