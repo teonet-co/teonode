@@ -17,7 +17,14 @@ const teoApi = {
      * not found - empty string (length 0)
      * error - json with property error
      */
-    CMD_CHECK_USER_ANSWER: 130
+    CMD_CHECK_USER_ANSWER: 130,
+
+    /**
+     * data: {action: (add|remove), userId, group}
+     * add: if group not exists it will be created
+     * remove group from user
+     */
+    CMD_MANAGE_GROUPS: 131
 };
 
 
@@ -31,7 +38,7 @@ console.log("Teonode application based on teonet ver. " + teonet.version());
 /**
  * Teonet event callback
  *
- * Original C function parameters: 
+ * Original C function parameters:
  * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data)
  *
  * @param {pointer} ke Pointer to ksnetEvMgrClass, see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
@@ -94,6 +101,25 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         }
                     });
                     break;
+
+                case teoApi.CMD_MANAGE_GROUPS:
+                    let from = rd.from;
+                    if (rd.data.action === 'add') {
+                        db.addGroup(rd.data.userId, rd.data.group, function (err) {
+                            if (err) {
+                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(rd.data));
+                                console.log('CMD_MANAGE_GROUPS', err, rd.data);
+                            }
+                        });
+                    } else if (rd.data.action === 'remove') {
+                        db.removeGroup(rd.data.userId, rd.data.group, function (err) {
+                            if (err) {
+                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(rd.data));
+                                console.log('CMD_MANAGE_GROUPS', err, rd.data);
+                            }
+                        });
+                    }
+                    break;
                 default:
                     break;
             }
@@ -112,3 +138,9 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
 
 teonet.start('teo-node,teo-auth', '0.0.6', 3, 5, teoEventCb);
+
+
+/***
+ * todo
+ * работа с группами: cmd: 131; data: {userId, action: (add|remove), name}
+ */

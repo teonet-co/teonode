@@ -14,3 +14,12 @@ Answers:
   * found - json
   * not found - empty string (length 0)
   * error - json with property error
+  
+  
+#### 131 - CMD_MANAGE_GROUPS 
+  
+data: {action: (add|remove), userId, group}
+
+Note:
+  * add: if group not exists it will be created
+  * remove group from user

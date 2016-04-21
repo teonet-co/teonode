@@ -46,6 +46,15 @@ group by
 	u.registerDate;
 `;
 
+query.addGroup = `call spAddGroup(?, ?)`;
+
+query.removeGroup = `
+delete
+from userGroup
+where userId = ?
+	and groupId = (select groupId from groups where name = ?);
+`;
+
 
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
@@ -61,6 +70,14 @@ module.exports.checkUser = function (accessToken, done) {
 
         done(null, rows[0]);
     });
+};
+
+module.exports.addGroup = function (userId, group, done) {
+    sqlPool.execute(query.addGroup, [userId, group], done);
+};
+
+module.exports.removeGroup = function (userId, group, done) {
+    sqlPool.execute(query.removeGroup, [userId, group], done);
 };
 
 
