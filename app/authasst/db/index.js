@@ -15,6 +15,7 @@ select
 	u.email,
 	u.username,
 	u.registerDate userRegisterDate,
+	ac.expirationDate < NOW() as expired,
 	GROUP_CONCAT(g.groupId) groupId,
 	GROUP_CONCAT(g.name) groupName
 from accessTokens ac
@@ -34,7 +35,6 @@ from accessTokens ac
 where
 	ac.token = ?
 	and u.deactivated is null
-	and ac.expirationDate > NOW()
 
 
 group by
