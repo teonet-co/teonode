@@ -95,45 +95,42 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             let _rd = teonet.cloneObject(rd);
 
             // Command
-            switch (rd.cmd) {
+            switch (_rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
-                    //let from = rd.from; // using rd in callback throw Segmentation fault
-                    //let _rd = rd;
-                    let at = rd.data;
-                    db.checkUser(rd.data, function (err, _data) {
+                    db.checkUser(_rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: at, error: err.message}));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: _rd.data, error: err.message}));
                             return;
                         }
 
-                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: at, data: _data}));
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: _rd.data, data: _data}));
                     });
                     break;
 
                 case teoApi.CMD_MANAGE_GROUPS:
-                    rd.data = JSON.parse(rd.data);
+                    _rd.data = JSON.parse(_rd.data);
                     if (rd.data.action === 'add') {
-                        db.addGroup(rd.data.userId, rd.data.group, function (err) {
+                        db.addGroup(_rd.data.userId, _rd.data.group, function (err) {
                             if (err) {
-                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(rd.data));
-                                console.log('CMD_MANAGE_GROUPS', err, rd.data);
+                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(_rd.data));
+                                console.log('CMD_MANAGE_GROUPS', err, _rd.data);
                             }
                         });
-                    } else if (rd.data.action === 'remove') {
-                        db.removeGroup(rd.data.userId, rd.data.group, function (err) {
+                    } else if (_rd.data.action === 'remove') {
+                        db.removeGroup(_rd.data.userId, _rd.data.group, function (err) {
                             if (err) {
-                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(rd.data));
-                                console.log('CMD_MANAGE_GROUPS', err, rd.data);
+                                logger.error(err, 'CMD_MANAGE_GROUPS:' + JSON.stringify(_rd.data));
+                                console.log('CMD_MANAGE_GROUPS', err, _rd.data);
                             }
                         });
                     }
                     break;
                 
                 case teoApi.CMD_USER_INFO:
-                    rd.data = JSON.parse(rd.data);
-                    db.getUserInfo(rd.data, function (err, _data) {
+                    _rd.data = JSON.parse(_rd.data);
+                    db.getUserInfo(_rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_USER_INFO');
                             console.log('CMD_USER_INFO', err);
@@ -161,4 +158,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.7', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.8', 3, 5, teoEventCb);
