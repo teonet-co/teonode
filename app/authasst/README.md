@@ -11,9 +11,9 @@ AccessToken for checking contains in data.
 #### 130 - CMD_CHECK_USER_ANSWER 
 
 Answers:
- * found - {accessTokens, data}
- * not found - {accessTokens, data: null}
- * error - {accessTokens, error}
+ * found - {accessToken, data}
+ * not found - {accessToken, data: null}
+ * error - {accessToken, error}
   
 #### 131 - CMD_MANAGE_GROUPS 
   
