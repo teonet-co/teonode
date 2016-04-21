@@ -55,6 +55,11 @@ where userId = ?
 	and groupId = (select groupId from groups where name = ?);
 `;
 
+query.getUserInfo = `
+select userId, username
+from users 
+where userId in (?);
+`;
 
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
@@ -78,6 +83,22 @@ module.exports.addGroup = function (userId, group, done) {
 
 module.exports.removeGroup = function (userId, group, done) {
     sqlPool.execute(query.removeGroup, [userId, group], done);
+};
+
+module.exports.getUserInfo = function (userIds, done) {
+    sqlPool.execute(query.getUserInfo, [userIds], function (err, rows) {
+        if (err) {
+            done(err);
+            return;
+        }
+
+        if (rows.length === 0) {
+            done(null, null);
+            return;
+        }
+
+        done(null, rows[0]);
+    });
 };
 
 

@@ -9,7 +9,10 @@ const db = require('./db');
  * This application API commands
  */
 const teoApi = {
-    CMD_CHECK_USER: 129, // accessToken in data
+    /**
+     * data: 'accessToken'
+     */
+    CMD_CHECK_USER: 129,
 
     /**
      * Answers:
@@ -24,7 +27,19 @@ const teoApi = {
      * add: if group not exists it will be created
      * remove group from user
      */
-    CMD_MANAGE_GROUPS: 131
+    CMD_MANAGE_GROUPS: 131,
+
+    /**
+     * data: ['userId1', 'userId2', ...]
+     */
+    CMD_USER_INFO: 132,
+
+    /**
+     * found - [{userId, username}, ...]
+     * not found - null
+     * error - {error}
+     */
+    CMD_USER_INFO_ANSWER: 133
 };
 
 
@@ -82,8 +97,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             // Command
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
-                    //let from = rd.from; // using rd in callback throw Segmentation fault
-                    //let _rd = rd;
                     db.checkUser(rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
@@ -97,6 +110,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     break;
 
                 case teoApi.CMD_MANAGE_GROUPS:
+                    rd.data = JSON.parse(rd.data);
                     if (rd.data.action === 'add') {
                         db.addGroup(rd.data.userId, rd.data.group, function (err) {
                             if (err) {
@@ -112,6 +126,20 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                             }
                         });
                     }
+                    break;
+                
+                case teoApi.CMD_USER_INFO:
+                    rd.data = JSON.parse(rd.data);
+                    db.getUserInfo(rd.data, function (err, _data) {
+                        if (err) {
+                            logger.error(err, 'CMD_USER_INFO');
+                            console.log('CMD_USER_INFO', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_USER_INFO_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_USER_INFO_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
                     break;
                 default:
                     break;
