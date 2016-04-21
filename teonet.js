@@ -375,12 +375,12 @@ module.exports = {
          * @param {'string'} cname L0 client name (include trailing zero)
          * @param {'size_t'} cname_length Length of the L0 client name
          * @param {'uint8'} cmd Command
-         * @param {'pointer'} data Data
+         * @param {'string'} data Data
          * @param {'size_t'} data_len Data length
          *
          * @return {'int'} Return 0 if success; -1 if data length is too lage (more than 32319)
          */
-        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'pointer', 'size_t']],
+        'ksnLNullSendToL0': ['int', ['pointer', 'string', 'int', 'string', 'size_t', 'uint8', 'string', 'size_t']],
 
         'syslog': ['void', ['int', 'string']]
     }),
@@ -429,32 +429,38 @@ module.exports = {
      * Send request answer data to Peer or L0 server client (
      *
      * @param {'pointer'} ke Pointer to ksnetEvMgrClass
-     * @param {type} rd_ptr Pointer to ksnCorePacketData
+     * @param {'pointer'|object} rd Pointer to ksnCorePacketData
      * param {'string'}  name Peer or Client name
      * @param {'uint8'} cmd Comand to send
      * @param {'pointer'} out_data Output data
      * @returns {'int'|'pointer'}
      */
-    sendCmdAnswerTo: function (ke, rd /*rd_ptr*/, cmd, out_data) {
+    sendCmdAnswerTo: function (ke, rd, cmd, out_data) {
 
-        //var rd = new ksnCorePacketData(rd_ptr);
         var retavl;
+        
+        console.log("sendCmdAnswerTo", ke, rd, cmd, out_data );
 
         if (rd.l0_f) {
             retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
         }
         else {
-            //var ke_ptr = new ksnetEvMgrClass(ke);
-
-            //retavl = ksnCoreSendCmdto(ke_ptr.kc, name, cmd, // TODO: parse ke.kc
-            //    out_data, out_data_len);
-
-            // TODO: use this function insted of ksnCoreSendCmdto
-            this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
+            retavl = this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
         }
 
         return retavl;
     },
+    
+    /**
+     * Clone an object
+     * 
+     * @param {type} obj
+     * @returns {unresolved}
+     */
+    cloneObject: function(obj) {
+        return JSON.parse(JSON.stringify(obj));
+        //return Object.assign({}, obj);
+    }, 
 
     /**
      * Send command to peer

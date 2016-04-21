@@ -38,7 +38,7 @@ console.log("Teonode application based on teonet ver. " + teonet.version());
 /**
  * Teonet event callback
  *
- * Original C function parameters:
+ * Original C function parameters: 
  * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data)
  *
  * @param {pointer} ke Pointer to ksnetEvMgrClass, see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
@@ -74,30 +74,28 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         // EV_K_RECEIVED #5 This host Received a data
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
+            // use copy of rd object in callbacks, because rd object 
+            // automatically free after use (after return) and there is 
+            // segmentation fault error in callbacks if we use direct rd
+            let _rd = teonet.cloneObject(rd); 
 
             // Command
             switch (rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
-                    let from = rd.from; // using rd in callback throw Segmentation fault
+                    //let from = rd.from; // using rd in callback throw Segmentation fault
                     //let _rd = rd;
                     db.checkUser(rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
-                            teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({error: err.message}));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({error: err.message}));
                             return;
                         }
 
                         if (_data) {
-//                            if(rd.l0_f)
-//                                teonet.ksnLNullSendToL0(_ke,
-//                                    rd.addr, rd.port, from, teoApi.CMD_CHECK_USER_ANSWER,
-//                                    JSON.stringify(_data));
-//                            else
-//                                teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
-                            teonet.sendCmdAnswerTo(_ke, rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
                         } else {
-                            teonet.sendCmdTo(_ke, from, teoApi.CMD_CHECK_USER_ANSWER, null);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, null);
                         }
                     });
                     break;
@@ -137,10 +135,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.6', 3, 5, teoEventCb);
-
-
-/***
- * todo
- * работа с группами: cmd: 131; data: {userId, action: (add|remove), name}
- */
+teonet.start('teo-node,teo-auth', '0.0.7', 3, 5, teoEventCb);
