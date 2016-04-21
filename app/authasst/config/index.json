@@ -1,7 +1,7 @@
 {
   "mysql": {
     "connectionLimit": 10,
-    "host": "10.15.56.124",
+    "host": "teomac.ksproject.org",
     "user": "authUser",
     "password": "123",
     "database": "authPrototype"

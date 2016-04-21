@@ -82,6 +82,80 @@ var ksnCoreClass = StructType({
 });
 var ksnCoreClassPtr = ref.refType(ksnCoreClass);
 
+var ksnet_cfg = StructType({
+
+    ke: 'pointer'       ///< Poiner to ksnetEventManager
+//
+//    // Flags
+//    int show_connect_f,    ///< Show connection message
+//        show_debug_f,     ///< Show debug messages
+//        show_debug_vv_f, ///< Show debug vv messages
+//        show_peers_f,   ///< Show peers at start up
+//        hot_keys_f,    ///< Show hotkeys when press h
+//        crypt_f,      ///< Encrypt/Decrypt packets
+//        vpn_connect_f,  ///< Start VPN flag
+//        show_tr_udp_f, ///< Show TR-UDP statistic at start up   
+//        sig_segv_f; ///< SIGSEGV processing
+//    
+//    // Daemon mode flags
+//    int dflag,  ///< Start application in Daemon mode
+//        kflag;  ///< Kill application in Daemon mode
+//
+//    // Network
+//    char network[KSN_BUFFER_SM_SIZE/2];     ///< Network
+//    char net_key[KSN_BUFFER_SM_SIZE/2];     ///< Network key
+//
+//    // Application name
+//    char app_prompt[KSN_BUFFER_SM_SIZE/2];      ///< Application prompt
+//    char app_name[KSN_BUFFER_SM_SIZE/2];        ///< Application name
+//    char app_description[KSN_BUFFER_SM_SIZE/2]; ///< Application description
+//    
+//    // Application parameters
+//    int app_argc; ///< Number of requered application parameters    
+//    char **app_argv; ///< Array of application parameters
+//
+//    // Host name & port
+//    long port;                              ///< This host port number
+//    int  port_inc_f;                        ///< Increment host port if busy
+//    char host_name[KSN_MAX_HOST_NAME];      ///< This host name
+//    
+//    // TCP Proxy
+//    int  tcp_allow_f;       ///< Allow TCP Proxy connections to this host
+//    long tcp_port;          ///< TCP Proxy port number
+//    
+//    // L0 Server
+//    int  l0_allow_f;                             ///< Allow L0 Server and l0 client connections to this host
+//    char l0_tcp_ip_remote[KSN_BUFFER_SM_SIZE/2]; ///< L0 Server remote IP address (send clients to connect to server)
+//    long l0_tcp_port;                            ///< L0 Server TCP port number
+//
+//    // R-Host
+//    char r_host_addr[KSN_BUFFER_SM_SIZE/2]; ///< Remote host internet address
+//    long r_port;                            ///< Remote host port
+//    long r_tcp_port;                        ///< Remote host tcp port
+//    int r_tcp_f;            ///< Connect to TCP Proxy R-Host  
+//
+//    // VPN
+//    char vpn_dev_name[KSN_MAX_HOST_NAME];   ///< VPN Interface device name
+//    char vpn_dev_hwaddr[KSN_MAX_HOST_NAME]; ///< VPN Interface MAC address
+//    char vpn_ip[KSN_BUFFER_SM_SIZE/2];      ///< VPN Interface IP
+//    long vpn_ip_net;                        ///< VPN Interface network mask
+//    long vpn_mtu;                           ///< VPN Interface MTU
+//    
+//    // Terminal
+////    char t_username[KSN_BUFFER_SM_SIZE/2]; ///< User name to login to terminal
+////    char t_password[KSN_BUFFER_SM_SIZE/2]; ///< Password to login to terminal
+//    
+//    // Syslog options
+//    long log_priority;                       ///< Syslog priority 
+//    
+//    // Helpers
+//    int pp;
+//    char pn[KSN_BUFFER_SM_SIZE];
+//    char r_host_name[KSN_MAX_HOST_NAME];    ///< Remote host name (if connected)
+
+});
+
+
 /**
  * KSNet event manager functions data
  */
@@ -89,19 +163,19 @@ var ksnetEvMgrClass = StructType({
 
     // Pointers to Modules classes
     km: 'pointer',          ///< Pointer to multi net class
-    kc: ksnCoreClassPtr     ///< Pointer to ksnCoreClass core class
-//    ksnetHotkeysClass *kh; ///< Hotkeys class
-//    ksnVpnClass *kvpn; ///< VPN class
-//    ksnTcpClass *kt; ///< TCP Client/Server class
-//    ksnLNullClass *kl; ///< L0 Server class
-//    ksnTCPProxyClass *tp; ///< TCP Proxy class
-//    ksnTunClass *ktun; ///< Tunnel class
-//    ksnTermClass *kter; ///< Terminal class
-//    ksnCQueClass *kq; ///< Callback QUEUE class
-//    ksnTDBClass *kf; ///< PBL KeyFile class
-//    ksnStreamClass *ks; ///< Stream class
-//
-//    ksnet_cfg ksn_cfg; ///< KSNet configuration
+    kc: ksnCoreClassPtr,    ///< Pointer to ksnCoreClass core class
+    kh: 'pointer',          //    ksnetHotkeysClass *kh; ///< Hotkeys class
+    kvpn: 'pointer',         //    ksnVpnClass *kvpn; ///< VPN class
+    kt: 'pointer',          //    ksnTcpClass *kt; ///< TCP Client/Server class
+    kl: 'pointer',          //    ksnLNullClass *kl; ///< L0 Server class
+    tp: 'pointer',          //    ksnTCPProxyClass *tp; ///< TCP Proxy class
+    ktun: 'pointer',        //    ksnTunClass *ktun; ///< Tunnel class
+    kter: 'pointer',        //    ksnTermClass *kter; ///< Terminal class
+    kq: 'pointer',          //    ksnCQueClass *kq; ///< Callback QUEUE class
+    kf: 'pointer',          //    ksnTDBClass *kf; ///< PBL KeyFile class
+    ks: 'pointer',          //    ksnStreamClass *ks; ///< Stream class
+
+    ksn_cfg: ksnet_cfg      //    ksnet_cfg ksn_cfg; ///< KSNet configuration
 //
 //    int runEventMgr; ///< Run even manages (stop if 0)
 //    uint32_t timer_val; ///< Event loop timer value
@@ -439,10 +513,8 @@ module.exports = {
 
         var retavl;
         
-        console.log("sendCmdAnswerTo", ke, rd, cmd, out_data );
-
         if (rd.l0_f) {
-            retavl = this.lib.ksnLNullSendToL0(ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
+            retavl = this.lib.ksnLNullSendToL0(ke.ksn_cfg.ke, rd.addr, rd.port, rd.from, rd.from_len, cmd, out_data, getLength(out_data));
         }
         else {
             retavl = this.lib.ksnCoreSendto(ke.kc, rd.addr, rd.port, cmd, out_data, getLength(out_data));
