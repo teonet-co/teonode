@@ -22,6 +22,9 @@
  * THE SOFTWARE.
  */
 
+'use strict';
+
+
 var ref = require('ref');
 var ffi = require('ffi');
 var ArrayType = require('ref-array');
@@ -158,6 +161,7 @@ var ksnet_cfg = StructType({
 
 /**
  * KSNet event manager functions data
+ * After call ksnetEvMgrClass(ke_ptr) ke['ref.buffer'] will contain original pointer
  */
 var ksnetEvMgrClass = StructType({
 
