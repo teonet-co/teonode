@@ -11,10 +11,9 @@ AccessToken for checking contains in data.
 #### 130 - CMD_CHECK_USER_ANSWER 
 
 Answers:
-  * found - json
-  * not found - empty string (length 0)
-  * error - json with property error
-  
+ * found - {accessTokens, data}
+ * not found - {accessTokens, data: null}
+ * error - {accessTokens, error}
   
 #### 131 - CMD_MANAGE_GROUPS 
   

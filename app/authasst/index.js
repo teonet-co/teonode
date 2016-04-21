@@ -13,9 +13,9 @@ const teoApi = {
 
     /**
      * Answers:
-     * found - json
-     * not found - empty string (length 0)
-     * error - json with property error
+     * found - {accessTokens, data}
+     * not found - {accessTokens, data: null}
+     * error - {accessTokens, error}
      */
     CMD_CHECK_USER_ANSWER: 130,
 
@@ -38,7 +38,7 @@ console.log("Teonode application based on teonet ver. " + teonet.version());
 /**
  * Teonet event callback
  *
- * Original C function parameters: 
+ * Original C function parameters:
  * void roomEventCb(ksnetEvMgrClass *ke, ksnetEvMgrEvents event, void *data, size_t data_len, void *user_data)
  *
  * @param {pointer} ke Pointer to ksnetEvMgrClass, see the http://repo.ksproject.org/docs/teonet/structksnetEvMgrClass.html
@@ -77,7 +77,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
             // use copy of rd object in callbacks, because rd object 
             // automatically free after use (after return) and there is 
             // segmentation fault error in callbacks if we use direct rd
-            let _rd = teonet.cloneObject(rd); 
+            let _rd = teonet.cloneObject(rd);
 
             // Command
             switch (rd.cmd) {
@@ -88,20 +88,15 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({error: err.message}));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessTokens: rd.data, error: err.message}));
                             return;
                         }
 
-                        if (_data) {
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify(_data));
-                        } else {
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, null);
-                        }
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessTokens: rd.data, data: _data}));
                     });
                     break;
 
                 case teoApi.CMD_MANAGE_GROUPS:
-                    let from = rd.from;
                     if (rd.data.action === 'add') {
                         db.addGroup(rd.data.userId, rd.data.group, function (err) {
                             if (err) {
