@@ -13,9 +13,9 @@ const teoApi = {
 
     /**
      * Answers:
-     * found - {accessTokens, data}
-     * not found - {accessTokens, data: null}
-     * error - {accessTokens, error}
+     * found - {accessToken, data}
+     * not found - {accessToken, data: null}
+     * error - {accessToken, error}
      */
     CMD_CHECK_USER_ANSWER: 130,
 
@@ -84,15 +84,16 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                 case teoApi.CMD_CHECK_USER:
                     //let from = rd.from; // using rd in callback throw Segmentation fault
                     //let _rd = rd;
+                    let at = rd.data;
                     db.checkUser(rd.data, function (err, _data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessTokens: rd.data, error: err.message}));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: at, error: err.message}));
                             return;
                         }
 
-                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessTokens: rd.data, data: _data}));
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: at, data: _data}));
                     });
                     break;
 
