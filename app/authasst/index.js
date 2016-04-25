@@ -20,7 +20,7 @@ const teoApi = {
      * not found - {accessToken, data: null}
      * error - {accessToken, error}
      */
-    CMD_CHECK_USER_ANSWER: 130,
+    CMD_CHECK_USER_ANSWER: 96, //130,
 
     /**
      * data: {action: (add|remove), userId, group}
@@ -158,4 +158,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.8', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.9', 3, 5, teoEventCb);
