@@ -39,7 +39,19 @@ const teoApi = {
      * not found - null
      * error - {error}
      */
-    CMD_USER_INFO_ANSWER: 133
+    CMD_USER_INFO_ANSWER: 133,
+
+    /**
+     * data: ['clientId1', 'clientId2', ...]
+     */
+    CMD_CLIENT_INFO: 134,
+
+    /**
+     * found - [{clientId, registerDate, data: {}}, ...]
+     * not found - null
+     * error - {error}
+     */
+    CMD_CLIENT_INFO_ANSWER: 135
 };
 
 
@@ -101,11 +113,17 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: _rd.data, error: err.message}));
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
+                                accessToken: _rd.data,
+                                error: err.message
+                            }));
                             return;
                         }
 
-                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({accessToken: _rd.data, data: _data}));
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
+                            accessToken: _rd.data,
+                            data: _data
+                        }));
                     });
                     break;
 
@@ -127,7 +145,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         });
                     }
                     break;
-                
+
                 case teoApi.CMD_USER_INFO:
                     _rd.data = JSON.parse(_rd.data);
                     db.getUserInfo(_rd.data, function (err, _data) {
@@ -139,6 +157,20 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         }
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_USER_INFO_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
+                    break;
+
+                case teoApi.CMD_CLIENT_INFO:
+                    _rd.data = JSON.parse(_rd.data);
+                    db.getClientInfo(_rd.data, function (err, _data) {
+                        if (err) {
+                            logger.error(err, 'CMD_CLIENT_INFO');
+                            console.log('CMD_CLIENT_INFO', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CLIENT_INFO_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CLIENT_INFO_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
                     break;
                 default:

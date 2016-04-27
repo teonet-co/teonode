@@ -61,6 +61,17 @@ from users
 where userId in (?);
 `;
 
+query.getClientInfo = `
+select 
+	clientId, 
+--	clientSecret, 
+--	clientKey, 
+	registerDate, 
+	data 
+from clients 
+where clientId in (?);
+`;
+
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
         if (err) {
@@ -98,6 +109,29 @@ module.exports.getUserInfo = function (userIds, done) {
         }
 
         done(null, rows[0]);
+    });
+};
+
+
+module.exports.getClientInfo = function (clientIds, done) {
+    sqlPool.execute(query.getClientInfo, [clientIds], function (err, rows) {
+        if (err) {
+            done(err);
+            return;
+        }
+
+        if (rows.length === 0) {
+            done(null, null);
+            return;
+        }
+
+        done(null, {
+            clientId: rows[0].clientId,
+            // clientSecret: rows[0].clientSecret,
+            // clientKey: rows[0].clientKey,
+            registerDate: rows[0].registerDate,
+            data: JSON.parse(rows[0].data)
+        });
     });
 };
 

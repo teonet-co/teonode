@@ -36,3 +36,16 @@ Answers:
  * found - [{userId, username}, ...]
  * not found - null
  * error - {error}
+ 
+ 
+#### 134 - CMD_CLIENT_INFO
+
+data: ['clientId1', 'clientId2', ...]
+
+
+#### 135 - CMD_CLIENT_INFO_ANSWER
+
+Answers:
+ * found - [{clientId, registerDate, data: {}}, ...]
+ * not found - null
+ * error - {error}
