@@ -190,4 +190,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.9', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.10', 3, 5, teoEventCb);
