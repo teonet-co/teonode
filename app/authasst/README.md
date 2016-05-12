@@ -49,3 +49,15 @@ Answers:
  * found - [{clientId, registerDate, data: {}}, ...]
  * not found - null
  * error - {error}
+
+### 136 - CMD_GET_NUM_USERS
+
+no data
+    
+### 137 -CMD_GET_NUM_USERS_ANSWER
+
+Answers:
+ * found - { numUsers }
+ * not found - null
+ * error - { error }
+

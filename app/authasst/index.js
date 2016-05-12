@@ -51,7 +51,21 @@ const teoApi = {
      * not found - null
      * error - {error}
      */
-    CMD_CLIENT_INFO_ANSWER: 135
+    CMD_CLIENT_INFO_ANSWER: 135,
+    
+    /**
+     * no data
+     */
+    CMD_GET_NUM_USERS: 136,
+    
+    /**
+     * Answers:
+     * found - { numUsers }
+     * not found - null
+     * error - { error }
+     */
+    CMD_GET_NUM_USERS_ANSWER: 137
+    
 };
 
 
@@ -173,6 +187,23 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CLIENT_INFO_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
                     break;
+                    
+                case teoApi.CMD_GET_NUM_USERS:
+                    _rd.data = JSON.parse(_rd.data);
+                    //console.log('CMD_GET_NUM_USERS', _rd.data);
+                    db.getNumUsers(_rd.data, function (err, _data) {
+                        //console.log('CMD_GET_NUM_USERS', err, _rd.data);
+                        if (err) {
+                            logger.error(err, 'CMD_GET_NUM_USERS');
+                            console.log('CMD_GET_NUM_USERS', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NUM_USERS_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NUM_USERS_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
+                    break;                    
+                    
                 default:
                     break;
             }
@@ -190,4 +221,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.10', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.11', 3, 5, teoEventCb);

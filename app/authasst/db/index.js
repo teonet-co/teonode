@@ -72,6 +72,13 @@ from clients
 where clientId in (?);
 `;
 
+query.getNumUsers = `
+SELECT 
+    COUNT(userId) as numUsers 
+FROM users
+where deactivated is NULL;
+`;
+
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
         if (err) {
@@ -131,6 +138,26 @@ module.exports.getClientInfo = function (clientIds, done) {
             // clientKey: rows[0].clientKey,
             registerDate: rows[0].registerDate,
             data: JSON.parse(rows[0].data)
+        });
+    });
+};
+
+module.exports.getNumUsers = function (params, done) {
+    sqlPool.execute(query.getNumUsers, [params], function (err, rows) {
+        
+        //console.log('getNumUsers', err, rows);
+        if (err) {
+            done(err);
+            return;
+        }
+
+        if (rows.length === 0) {
+            done(null, null);
+            return;
+        }
+
+        done(null, {
+            numUsers: rows[0].numUsers
         });
     });
 };
