@@ -61,3 +61,14 @@ Answers:
  * not found - null
  * error - { error }
 
+### 138 - CMD_GET_USERS_LIST
+
+no data
+    
+### 139 -CMD_GET_USERS_LIST_ANSWER
+
+Answers:
+ * found - [{ userId, username }]
+ * not found - null
+ * error - { error }
+

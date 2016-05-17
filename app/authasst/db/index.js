@@ -79,6 +79,13 @@ FROM users
 where deactivated is NULL;
 `;
 
+query.getUsersList = `
+SELECT 
+    userId, username
+FROM users
+where deactivated is NULL;
+`;
+
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
         if (err) {
@@ -161,6 +168,11 @@ module.exports.getNumUsers = function (params, done) {
         });
     });
 };
+
+module.exports.getUsersList = function (params, done) {
+    sqlPool.execute(query.getUsersList, [params], done);
+};
+
 
 
 //// test:
