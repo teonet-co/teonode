@@ -81,7 +81,7 @@ where deactivated is NULL;
 
 query.getUsersList = `
 SELECT 
-    userId, username
+    userId, username, email, registerDate
 FROM users
 where deactivated is NULL;
 `;

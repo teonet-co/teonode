@@ -65,7 +65,7 @@ Answers:
 
 no data
     
-### 139 -CMD_GET_USERS_LIST_ANSWER
+### 139 - CMD_GET_USERS_LIST_ANSWER
 
 Answers:
  * found - [{ userId, username }]
