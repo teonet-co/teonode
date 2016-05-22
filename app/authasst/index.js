@@ -77,8 +77,22 @@ const teoApi = {
      * not found - null
      * error - { error }
      */
-    CMD_GET_USERS_LIST_ANSWER: 139
+    CMD_GET_USERS_LIST_ANSWER: 139,
+            
+    /**
+     * no data
+     */
+    CMD_GET_NETWORKS_LIST: 140,
+    
+    /**
+     * Answers:
+     * found - { numUsers }
+     * not found - null
+     * error - { error }
+     */
+    CMD_GET_NETWORKS_LIST_ANSWER: 141
                
+    
 };
 
 
@@ -233,6 +247,22 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     });
                     break;                    
                                         
+                case teoApi.CMD_GET_NETWORKS_LIST:
+                    _rd.data = JSON.parse(_rd.data);
+                    //console.log('CMD_GET_NETWORKS_LIST', _rd.data);
+                    db.getNetworksList(_rd.data, function (err, _data) {
+                        //console.log('CMD_GET_NETWORKS_LIST', err, _rd.data);
+                        if (err) {
+                            logger.error(err, 'CMD_GET_NETWORKS_LIST');
+                            console.log('CMD_GET_NETWORKS_LIST', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
+                    break;                    
+                                        
                 default:
                     break;
             }
@@ -250,4 +280,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.13', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.14', 3, 5, teoEventCb);

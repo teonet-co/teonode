@@ -88,6 +88,13 @@ where NOT ((username = "1" OR username = "2") AND (email like "test@%" OR email 
 order by username;
 `;
 
+query.getNetworksList = `
+SELECT 
+    network, "name", "host", port, l0_tcp_port, peer 
+FROM teonet.networks
+order by "name";
+`;
+
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
         if (err) {
@@ -175,7 +182,9 @@ module.exports.getUsersList = function (params, done) {
     sqlPool.execute(query.getUsersList, [params], done);
 };
 
-
+module.exports.getNetworksList = function (params, done) {
+    sqlPool.execute(query.getNetworksList, [params], done);
+};
 
 //// test:
 //module.exports.checkUser('1e6d312074bf7650d2ee013e174d02333d8ba9f6c3c7f483639e041aec8200f5', function(err, data) {

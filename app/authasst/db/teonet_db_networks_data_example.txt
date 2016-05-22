@@ -1,0 +1,13 @@
+# networkId, network, name, host, port, l0_tcp_port, peer, description, created
+30cd3e7c-1f2b-11e6-a3a3-0242ac110002, liferace, liferace, lr.gbstudios.ru, 8088, 9000, teo-web,NULL,NULL, 2016-05-21 08:28:46
+88b44203-1f31-11e6-a3a3-0242ac110002, liferace-e, liferace-e, pnode2.gbs.bingo-boom.ru, 8088, 9000, teo-web,NULL,NULL, 2016-05-21 08:53:48
+, liferace-main, liferace main, 10.12.35.53, 8088, 9000, teo-web,NULL,NULL,NULL
+, liferace-reserved, liferace reserved, 10.15.56.61, 8088, 9000, teo-web,NULL,NULL,NULL
+, localhost, localhost, localhost, 8089, 9100, teo-web,NULL,NULL,NULL
+, teonet, teonet gw2, teomac.ksproject.org, 80, 9000, ps-server,NULL,NULL,NULL
+, teonet-max, max, teomac.ksproject.org, 8080, 9210, teo-web,NULL,NULL,NULL
+
+
+
+
+
