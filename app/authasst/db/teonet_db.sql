@@ -29,3 +29,5 @@ BEGIN
 END;@@
 DELIMITER ; 
 
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE on teonet.* to 'authUser'@'%';
+
