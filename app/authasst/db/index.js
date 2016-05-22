@@ -90,9 +90,9 @@ order by username;
 
 query.getNetworksList = `
 SELECT 
-    network, `name`, `host`, port, l0_tcp_port, peer 
+    network, name, host, port, l0_tcp_port, peer 
 FROM teonet.networks
-order by `name`;
+order by name;
 `;
 
 module.exports.checkUser = function (accessToken, done) {
