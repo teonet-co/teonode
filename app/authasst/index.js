@@ -52,12 +52,12 @@ const teoApi = {
      * error - {error}
      */
     CMD_CLIENT_INFO_ANSWER: 135,
-    
+
     /**
      * no data
      */
     CMD_GET_NUM_USERS: 136,
-    
+
     /**
      * Answers:
      * found - { numUsers }
@@ -65,12 +65,12 @@ const teoApi = {
      * error - { error }
      */
     CMD_GET_NUM_USERS_ANSWER: 137,
-        
+
     /**
      * no data
      */
     CMD_GET_USERS_LIST: 138,
-    
+
     /**
      * Answers:
      * found - { numUsers }
@@ -78,12 +78,12 @@ const teoApi = {
      * error - { error }
      */
     CMD_GET_USERS_LIST_ANSWER: 139,
-            
+
     /**
      * no data
      */
     CMD_GET_NETWORKS_LIST: 140,
-    
+
     /**
      * Answers:
      * found - { numUsers }
@@ -91,8 +91,7 @@ const teoApi = {
      * error - { error }
      */
     CMD_GET_NETWORKS_LIST_ANSWER: 141
-               
-    
+
 };
 
 
@@ -142,15 +141,15 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
         // EV_K_RECEIVED #5 This host Received a data
         case teonet.ev.EV_K_RECEIVED:
             rd = new teonet.packetData(data);
-            // use copy of rd object in callbacks, because rd object 
-            // automatically free after use (after return) and there is 
+            // use copy of rd object in callbacks, because rd object
+            // automatically free after use (after return) and there is
             // segmentation fault error in callbacks if we use direct rd
             let _rd = teonet.cloneObject(rd);
 
             // Command
             switch (_rd.cmd) {
                 case teoApi.CMD_CHECK_USER:
-                    db.checkUser(_rd.data, function (err, _data) {
+                    db.checkUser(_rd.data, function (err, user) {
                         if (err) {
                             logger.error(err, 'CMD_CHECK_USER');
                             console.log('CMD_CHECK_USER', err);
@@ -161,10 +160,25 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                             return;
                         }
 
-                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
-                            accessToken: _rd.data,
-                            data: _data
-                        }));
+                        console.log('CMD_CHECK_USER_ANSWER', _rd.data, user);
+
+                        db.getNetworksList(_rd.data, function (err, networks) {
+                            if (err) {
+                                logger.error(err, 'CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST');
+                                console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', err);
+                                teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, JSON.stringify({error: err.message}));
+                                return;
+                            }
+
+                            console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', _rd.data, networks);
+
+                            //teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, user ? JSON.stringify(user) : null);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
+                                accessToken: _rd.data,
+                                user,
+                                networks
+                            }) + '\0');
+                        });
                     });
                     break;
 
@@ -214,7 +228,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CLIENT_INFO_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
                     break;
-                    
+
                 case teoApi.CMD_GET_NUM_USERS:
                     _rd.data = JSON.parse(_rd.data);
                     //console.log('CMD_GET_NUM_USERS', _rd.data);
@@ -229,8 +243,8 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NUM_USERS_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
-                    break;                    
-                    
+                    break;
+
                 case teoApi.CMD_GET_USERS_LIST:
                     _rd.data = JSON.parse(_rd.data);
                     //console.log('CMD_GET_NUM_USERS', _rd.data);
@@ -245,8 +259,8 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_USERS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
-                    break;                    
-                                        
+                    break;
+
                 case teoApi.CMD_GET_NETWORKS_LIST:
                     _rd.data = JSON.parse(_rd.data);
                     //console.log('CMD_GET_NETWORKS_LIST', _rd.data);
@@ -261,8 +275,8 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
-                    break;                    
-                                        
+                    break;
+
                 default:
                     break;
             }
@@ -280,4 +294,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.14', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.15', 3, 5, teoEventCb);

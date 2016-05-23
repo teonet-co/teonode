@@ -72,3 +72,14 @@ Answers:
  * not found - null
  * error - { error }
 
+### 140 - CMD_GET_NETWORKS_LIST
+
+no data
+    
+### 141 - CMD_GET_NETWORKS_LIST_ANSWER
+
+Answers:
+ * found - [{ userId, username }]
+ * not found - null
+ * error - { error }
+
