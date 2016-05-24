@@ -293,18 +293,58 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     
                 case teoApi.CMD_INSERT_NETWORK:
                     _rd.data = JSON.parse(_rd.data);
-                    console.log('CMD_INSERT_NETWORK', _rd.data);
-                    db.insertNetwork(Object.keys(_rd.data.network), Object.values(_rd.data.network), function (err, _data) {
-                        //console.log('CMD_INSERT_NETWORK', err, _rd.data);
-                        if (err) {
-                            logger.error(err, 'CMD_INSERT_NETWORK');
-                            console.log('CMD_INSERT_NETWORK', err);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
-                            return;
-                        }
+                    //console.log('CMD_INSERT_NETWORK', _rd.data);
+//                    var keys = Object.keys(_rd.data.network), values = [];
+//                    for (var i = 0; i < keys.length; i++) {
+//                        var val = _rd.data.network[keys[i]];
+//                        values.push(val);
+//                    }
+                    if(_rd.data.mode === 0)
+                      db.insertNetwork(
+                            _rd.data.network.name,
+                            _rd.data.network.network,
+                            _rd.data.network.host,
+                            _rd.data.network.port,
+                            _rd.data.network.l0_tcp_port,
+                            _rd.data.network.peer,
+                            _rd.data.network.description, 
+                            function (err, _data) {
+                                //console.log('CMD_INSERT_NETWORK', err, _rd.data);
+                                if (err) {
+                                    logger.error(err, 'CMD_INSERT_NETWORK');
+                                    console.log('CMD_INSERT_NETWORK', err);
+                                    teonet.sendCmdAnswerTo(_ke, _rd, 
+                                        teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                                    return;
+                                }
 
-                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
-                    });
+                                teonet.sendCmdAnswerTo(_ke, _rd, 
+                                    teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
+                            });
+                              
+                    else if(_rd.data.mode === 1)
+                      db.updateNetwork(
+                            _rd.data.network.name,
+                            _rd.data.network.network,
+                            _rd.data.network.host,
+                            _rd.data.network.port,
+                            _rd.data.network.l0_tcp_port,
+                            _rd.data.network.peer,
+                            _rd.data.network.description, 
+                            _rd.data.network.networkId,
+                            function (err, _data) {
+                                //console.log('CMD_INSERT_NETWORK', err, _rd.data);
+                                if (err) {
+                                    logger.error(err, 'CMD_INSERT_NETWORK');
+                                    console.log('CMD_INSERT_NETWORK', err);
+                                    teonet.sendCmdAnswerTo(_ke, _rd, 
+                                        teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                                    return;
+                                }
+
+                                teonet.sendCmdAnswerTo(_ke, _rd, 
+                                    teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
+                            });
                     break;
 
                 default:
@@ -324,4 +364,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.15', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.16', 3, 5, teoEventCb);

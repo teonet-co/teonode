@@ -95,8 +95,17 @@ FROM teonet.networks
 order by name;
 `;
 
+//query.insertNetwork = 'INSERT INTO teonet.networks SET ?';
 query.insertNetwork = `
-INSERT INTO teonet.networks (?) VALUES (?)
+INSERT INTO teonet.networks 
+    (networkId,name,network,host,port,l0_tcp_port,peer,description) 
+    VALUES("",?,?,?,?,?,?,?);
+`;
+
+query.updateNetwork = `
+UPDATE teonet.networks 
+    SET name = ?, network = ?, host = ?, port = ?, l0_tcp_port = ?, peer = ?, description = ? 
+    where networkId = ?;    
 `;
 
 module.exports.checkUser = function (accessToken, done) {
@@ -190,8 +199,14 @@ module.exports.getNetworksList = function (params, done) {
     sqlPool.execute(query.getNetworksList, [params], done);
 };
 
-module.exports.insertNetwork = function (fields, values, done) {
-    sqlPool.execute(query.insertNetwork, [fields], [values], done);
+module.exports.insertNetwork = function (name, network, host, port, l0_tcp_port, peer,description, done) {
+    //console.log("insertNetwork", name, network, host, port, l0_tcp_port, peer, description);
+    sqlPool.execute(query.insertNetwork, [name, network, host, port, l0_tcp_port, peer, description], done);
+};
+
+module.exports.updateNetwork = function (name, network, host, port, l0_tcp_port, peer, description, networkId, done) {
+    //console.log("updateNetwork", name, network, host, port, l0_tcp_port, peer, description);
+    sqlPool.execute(query.updateNetwork, [name, network, host, port, l0_tcp_port, peer, description, networkId], done);
 };
 
 //// test:
