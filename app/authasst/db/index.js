@@ -90,9 +90,13 @@ order by username;
 
 query.getNetworksList = `
 SELECT 
-    network, name, host, port, l0_tcp_port, peer 
+    networkId, network, name, host, port, l0_tcp_port, peer, description 
 FROM teonet.networks
 order by name;
+`;
+
+query.insertNetwork = `
+INSERT INTO teonet.networks (?) VALUES (?)
 `;
 
 module.exports.checkUser = function (accessToken, done) {
@@ -184,6 +188,10 @@ module.exports.getUsersList = function (params, done) {
 
 module.exports.getNetworksList = function (params, done) {
     sqlPool.execute(query.getNetworksList, [params], done);
+};
+
+module.exports.insertNetwork = function (fields, values, done) {
+    sqlPool.execute(query.insertNetwork, [fields], [values], done);
 };
 
 //// test:

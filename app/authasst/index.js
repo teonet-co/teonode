@@ -90,7 +90,21 @@ const teoApi = {
      * not found - null
      * error - { error }
      */
-    CMD_GET_NETWORKS_LIST_ANSWER: 141
+    CMD_GET_NETWORKS_LIST_ANSWER: 141,
+    
+    
+    /**
+     * no data
+     */
+    CMD_INSERT_NETWORK: 142,
+
+    /**
+     * Answers:
+     * found - { numUsers }
+     * not found - null
+     * error - { error }
+     */
+    CMD_INSERT_NETWORK_ANSWER: 143
 
 };
 
@@ -274,6 +288,22 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         }
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
+                    break;
+                    
+                case teoApi.CMD_INSERT_NETWORK:
+                    _rd.data = JSON.parse(_rd.data);
+                    console.log('CMD_INSERT_NETWORK', _rd.data);
+                    db.insertNetwork(Object.keys(_rd.data.network), Object.values(_rd.data.network), function (err, _data) {
+                        //console.log('CMD_INSERT_NETWORK', err, _rd.data);
+                        if (err) {
+                            logger.error(err, 'CMD_INSERT_NETWORK');
+                            console.log('CMD_INSERT_NETWORK', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
                     break;
 
