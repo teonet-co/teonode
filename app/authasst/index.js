@@ -96,7 +96,7 @@ const teoApi = {
     /**
      * no data
      */
-    CMD_INSERT_NETWORK: 142,
+    CMD_EDIT_NETWORK: 142,
 
     /**
      * Answers:
@@ -104,7 +104,7 @@ const teoApi = {
      * not found - null
      * error - { error }
      */
-    CMD_INSERT_NETWORK_ANSWER: 143
+    CMD_EDIT_NETWORK_ANSWER: 143
 
 };
 
@@ -174,7 +174,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                             return;
                         }
 
-                        console.log('CMD_CHECK_USER_ANSWER', _rd.data, user);
+                        //console.log('CMD_CHECK_USER_ANSWER', _rd.data, user);
 
                         db.getNetworksList(_rd.data, function (err, networks) {
                             if (err) {
@@ -184,7 +184,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                                 return;
                             }
 
-                            console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', _rd.data, networks);
+                            //console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', _rd.data, networks);
 
                             //teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, user ? JSON.stringify(user) : null);
                             teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
@@ -291,9 +291,9 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                     });
                     break;
                     
-                case teoApi.CMD_INSERT_NETWORK:
+                case teoApi.CMD_EDIT_NETWORK:
                     _rd.data = JSON.parse(_rd.data);
-                    //console.log('CMD_INSERT_NETWORK', _rd.data);
+                    //console.log('CMD_EDIT_NETWORK', _rd.data);
 //                    var keys = Object.keys(_rd.data.network), values = [];
 //                    for (var i = 0; i < keys.length; i++) {
 //                        var val = _rd.data.network[keys[i]];
@@ -309,17 +309,17 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                             _rd.data.network.peer,
                             _rd.data.network.description, 
                             function (err, _data) {
-                                //console.log('CMD_INSERT_NETWORK', err, _rd.data);
+                                console.log('CMD_EDIT_NETWORK.insert', err, _rd.data);
                                 if (err) {
-                                    logger.error(err, 'CMD_INSERT_NETWORK');
-                                    console.log('CMD_INSERT_NETWORK', err);
+                                    logger.error(err, 'CMD_EDIT_NETWORK');
+                                    console.log('CMD_EDIT_NETWORK', err);
                                     teonet.sendCmdAnswerTo(_ke, _rd, 
-                                        teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                                        teoApi.CMD_EDIT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
                                     return;
                                 }
 
                                 teonet.sendCmdAnswerTo(_ke, _rd, 
-                                    teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
+                                    teoApi.CMD_EDIT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
                             });
                               
                     else if(_rd.data.mode === 1)
@@ -333,18 +333,37 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                             _rd.data.network.description, 
                             _rd.data.network.networkId,
                             function (err, _data) {
-                                //console.log('CMD_INSERT_NETWORK', err, _rd.data);
+                                console.log('CMD_EDIT_NETWORK.update', err, _rd.data);
                                 if (err) {
-                                    logger.error(err, 'CMD_INSERT_NETWORK');
-                                    console.log('CMD_INSERT_NETWORK', err);
+                                    logger.error(err, 'CMD_EDIT_NETWORK');
+                                    console.log('CMD_EDIT_NETWORK', err);
                                     teonet.sendCmdAnswerTo(_ke, _rd, 
-                                        teoApi.CMD_INSERT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                                        teoApi.CMD_EDIT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
                                     return;
                                 }
 
                                 teonet.sendCmdAnswerTo(_ke, _rd, 
-                                    teoApi.CMD_INSERT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
+                                    teoApi.CMD_EDIT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
                             });
+                            
+                    else if(_rd.data.mode === 2)        
+                      db.deleteNetwork(
+                            _rd.data.network.networkId,
+                            function (err, _data) {
+                                console.log('CMD_EDIT_NETWORK.delete', err, _rd.data);
+                                if (err) {
+                                    logger.error(err, 'CMD_EDIT_NETWORK');
+                                    console.log('CMD_EDIT_NETWORK', err);
+                                    teonet.sendCmdAnswerTo(_ke, _rd, 
+                                        teoApi.CMD_EDIT_NETWORK_ANSWER, JSON.stringify({error: err.message}));
+                                    return;
+                                }
+
+                                teonet.sendCmdAnswerTo(_ke, _rd, 
+                                    teoApi.CMD_EDIT_NETWORK_ANSWER, _data ? JSON.stringify(_data) : null);
+                            });
+                            
+                            
                     break;
 
                 default:

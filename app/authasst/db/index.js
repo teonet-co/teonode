@@ -108,6 +108,8 @@ UPDATE teonet.networks
     where networkId = ?;    
 `;
 
+query.deleteNetwork = 'DELETE FROM teonet.networks where networkId = ?;';
+
 module.exports.checkUser = function (accessToken, done) {
     sqlPool.execute(query.checkUser, [accessToken], function (err, rows) {
         if (err) {
@@ -207,6 +209,11 @@ module.exports.insertNetwork = function (name, network, host, port, l0_tcp_port,
 module.exports.updateNetwork = function (name, network, host, port, l0_tcp_port, peer, description, networkId, done) {
     //console.log("updateNetwork", name, network, host, port, l0_tcp_port, peer, description);
     sqlPool.execute(query.updateNetwork, [name, network, host, port, l0_tcp_port, peer, description, networkId], done);
+};
+
+module.exports.deleteNetwork = function (networkId, done) {
+    //console.log("updateNetwork", name, network, host, port, l0_tcp_port, peer, description);
+    sqlPool.execute(query.deleteNetwork, [networkId], done);
 };
 
 //// test:
