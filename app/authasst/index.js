@@ -100,9 +100,7 @@ const teoApi = {
 
     /**
      * Answers:
-     * found - { numUsers }
-     * not found - null
-     * error - { error }
+     * no data
      */
     CMD_EDIT_NETWORK_ANSWER: 143
 
@@ -383,4 +381,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.16', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.18', 3, 5, teoEventCb);

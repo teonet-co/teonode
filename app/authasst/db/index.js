@@ -72,11 +72,13 @@ from clients
 where clientId in (?);
 `;
 
+query.getUsersWhere = 'NOT( (email like "test@%" OR email like "a@%") ) AND deactivated is NULL';
+
 query.getNumUsers = `
 SELECT 
     COUNT(userId) as numUsers 
 FROM users
-where NOT ((username = "1" OR username = "2") AND (email like "test@%" OR email like "a@%") ) AND deactivated is NULL
+where ` + query.getUsersWhere + `
 order by username;
 `;
 
@@ -84,7 +86,7 @@ query.getUsersList = `
 SELECT 
     userId, username, email, registerDate
 FROM users
-where NOT ((username = "1" OR username = "2") AND (email like "test@%" OR email like "a@%") ) AND deactivated is NULL
+where ` + query.getUsersWhere + `
 order by username;
 `;
 

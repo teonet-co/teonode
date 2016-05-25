@@ -83,3 +83,12 @@ Answers:
  * not found - null
  * error - { error }
 
+### 142 - CMD_EDIT_NETWORK
+
+ data: { mode, network }
+   
+### 143 - CMD_EDIT_NETWORK_ANSWER
+
+ Answers:
+ no data
+
