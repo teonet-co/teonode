@@ -74,6 +74,15 @@ where clientId in (?);
 
 query.getUsersWhere = 'NOT( (email like "test@%" OR email like "a@%") ) AND deactivated is NULL';
 
+query.getUsersGroupsList = `
+SELECT name 
+FROM userGroup ug
+LEFT JOIN groups g ON g.groupId = ug.groupId
+WHERE ug.userId in (?)
+GROUP BY ug.userId
+ORDER BY name;
+`;
+
 query.getNumUsers = `
 SELECT 
     COUNT(userId) as numUsers 
@@ -197,6 +206,10 @@ module.exports.getNumUsers = function (params, done) {
 
 module.exports.getUsersList = function (params, done) {
     sqlPool.execute(query.getUsersList, [params], done);
+};
+
+module.exports.getUsersGroupsList = function (params, done) {
+    sqlPool.execute(query.getUsersGroupsList, [params], done);
 };
 
 module.exports.getNetworksList = function (params, done) {

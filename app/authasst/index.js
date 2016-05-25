@@ -102,7 +102,19 @@ const teoApi = {
      * Answers:
      * no data
      */
-    CMD_EDIT_NETWORK_ANSWER: 143
+    CMD_EDIT_NETWORK_ANSWER: 143,
+    
+    /**
+     * data: ['userId1', 'userId2', ...]
+     */
+    CMD_GET_USER_GROUPS_LIST: 144,
+    
+    /**
+     * found - [{name}, ...]
+     * not found - null
+     * error - {error}
+     */
+    CMD_GET_USER_GROUPS_LIST_ANSWER: 145
 
 };
 
@@ -259,9 +271,9 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 
                 case teoApi.CMD_GET_USERS_LIST:
                     _rd.data = JSON.parse(_rd.data);
-                    //console.log('CMD_GET_NUM_USERS', _rd.data);
+                    //console.log('CMD_GET_USERS_LIST', _rd.data);
                     db.getUsersList(_rd.data, function (err, _data) {
-                        //console.log('CMD_GET_NUM_USERS', err, _rd.data);
+                        //console.log('CMD_GET_USERS_LIST', err, _rd.data);
                         if (err) {
                             logger.error(err, 'CMD_GET_USERS_LIST');
                             console.log('CMD_GET_USERS_LIST', err);
@@ -270,6 +282,22 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                         }
 
                         teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_USERS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
+                    });
+                    break;
+
+                case teoApi.CMD_GET_USER_GROUPS_LIST:
+                    _rd.data = JSON.parse(_rd.data);
+                    //console.log('CMD_GET_USERS_GROUPS_LIST', _rd.data);
+                    db.getUsersGroupsList(_rd.data, function (err, _data) {
+                        //console.log('CMD_GET_USERS_GROUPS_LIST', err, _data);
+                        if (err) {
+                            logger.error(err, 'CMD_GET_USERS_GROUPS_LIST');
+                            console.log('CMD_GET_USERS_GROUPS_LIST', err);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_USER_GROUPS_LIST_ANSWER, JSON.stringify({error: err.message}));
+                            return;
+                        }
+
+                        teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_USER_GROUPS_LIST_ANSWER, _data ? JSON.stringify(_data) : null);
                     });
                     break;
 
@@ -292,11 +320,6 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                 case teoApi.CMD_EDIT_NETWORK:
                     _rd.data = JSON.parse(_rd.data);
                     //console.log('CMD_EDIT_NETWORK', _rd.data);
-//                    var keys = Object.keys(_rd.data.network), values = [];
-//                    for (var i = 0; i < keys.length; i++) {
-//                        var val = _rd.data.network[keys[i]];
-//                        values.push(val);
-//                    }
                     if(_rd.data.mode === 0)
                       db.insertNetwork(
                             _rd.data.network.name,
@@ -381,4 +404,4 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.0.18', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-auth', '0.0.19', 3, 5, teoEventCb);
