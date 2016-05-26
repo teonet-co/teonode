@@ -56,7 +56,7 @@ where userId = ?
 `;
 
 query.getUserInfo = `
-select userId, username
+select userId, username, email
 from users 
 where userId in (?);
 `;
