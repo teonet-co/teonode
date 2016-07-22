@@ -23,7 +23,7 @@
  */
 
 // Declare Teonet
-var teonet = require('../teonet');
+var teonet = require('../teonet/teonet');
 var should = require('should'); // http://shouldjs.github.io/
 
 // Test function teoGetLibteonetVersion 

@@ -19,5 +19,5 @@ http://repo.ksproject.org/docs/teonet/ev__mgr_8h.html#ad7b9bff24cb809ad64c305b3e
 
 ### Run this node application:  
 
-    node teonode.js teo-node -a 10.12.35.53
+    node example/teonode.js teo-node -a 10.12.35.53
     // where the ip 10.12.35.53 is your network r-hose

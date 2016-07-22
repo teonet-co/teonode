@@ -6,7 +6,7 @@
  */
 
 var ref = require('ref');
-var teonet = require('./../teonet');
+var teonet = require('../teonet/teonet');
 
 
 /**

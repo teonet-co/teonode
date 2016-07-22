@@ -1,7 +1,7 @@
 'use strict';
 
 
-const teonet = require('../../teonet');
+const teonet = require('../../teonet/teonet');
 const logger = teonet.syslog('authasst', module.filename);
 const db = require('./db');
 
