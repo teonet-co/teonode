@@ -10,9 +10,10 @@ ADD docker/teonode_install.sh /root/
 ADD . /root/Projects/teonode/
 
 # Install
-WORKDIR /root/Projects/teonode
+WORKDIR /root/
 RUN ./teonode_install.sh
 RUN rm ./teonode_install.sh
+WORKDIR /root/Projects/teonode
 
 # CMD ["/root/teonet_watch_run"]
 
