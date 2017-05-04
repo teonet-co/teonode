@@ -10,7 +10,7 @@ ADD docker/teonode_install.sh /root/
 ADD . /root/Projects/teonode/
 
 # Install
-WORKDIR /root/
+WORKDIR /root/Projects/teonode
 RUN ./teonode_install.sh
 RUN rm ./teonode_install.sh
 
@@ -27,4 +27,5 @@ RUN rm ./teonode_install.sh
 #
 # Run watcher as an example
 # docker run -it --name watch gitlab.ksproject.org:5000/teonet/teonode node /root/Projects/teonode/app/watch teo-node-watch
+# docker run -it --name teoauth -w /root/Projects/teonode gitlab.ksproject.org:5000/teonet/teonode node app/authasst teo-auth
 #
