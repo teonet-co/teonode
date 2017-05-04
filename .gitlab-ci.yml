@@ -12,7 +12,7 @@ build_teonet_image:
     - docker build --no-cache -t gitlab.ksproject.org:5000/teonet/teonode:$CI_BUILD_TAG -f docker/Dockerfile .
     - docker push gitlab.ksproject.org:5000/teonet/teonode:$CI_BUILD_TAG
     # update latest
-    - docker tag -f gitlab.ksproject.org:5000/teonet/teonode:$CI_BUILD_TAG gitlab.ksproject.org:5000/teonet/teonode:latest
+    - docker tag gitlab.ksproject.org:5000/teonet/teonode:$CI_BUILD_TAG gitlab.ksproject.org:5000/teonet/teonode:latest
     - docker push gitlab.ksproject.org:5000/teonet/teonode:latest
   only:
     - tags  

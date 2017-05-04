@@ -131,4 +131,4 @@ let pingIntervalId = setInterval(() => {
 pingIntervalId.unref();
 
 
-teonet.start('teo-node,teo-watch', '0.1.4', 3, 5, teoEventCb);
+teonet.start('teo-node,teo-watch', '0.1.5', 3, 5, teoEventCb);
