@@ -8,16 +8,16 @@
 
 
 # Install dependencies:
-sudo apt-get update
-sudo apt-get install -y curl
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-sudo apt-get install -y nodejs
+apt-get update
+apt-get install -y curl
+curl -sL https://deb.nodesource.com/setup_6.x | bash -
+apt-get install -y nodejs
 
 # Install dependencies for build node-ffi:
 npm install -g node-gyp
-sudo apt-get install -y python2.7
+apt-get install -y python2.7
 npm config set python /usr/bin/python2.7
-sudo apt-get install -y build-essential
+apt-get install -y build-essential
 
 cd /root/Projects/teonode
 npm install
@@ -25,7 +25,7 @@ npm install
 
 
 ## Startup script
-#sudo cat <<EOT > /root/teonet_watch_run
+#cat <<EOT > /root/teonet_watch_run
 ##!/bin/sh
 ##
 ## teonet_watch_run
@@ -45,11 +45,11 @@ npm install
 #
 ##exec "$@"
 #
-##sudo exec "$@"
+##exec "$@"
 ##exit 0
 #EOT
 ##
-#sudo chmod +x /root/teonet_watch_run
+#chmod +x /root/teonet_watch_run
 ##
 
 
