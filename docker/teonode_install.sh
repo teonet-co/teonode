@@ -7,21 +7,32 @@
 #
 
 
-# Install dependencies:
+# Install NodeJS
 apt-get update
 apt-get install -y curl
-curl -sL https://deb.nodesource.com/setup_6.x | bash -
+curl -sL https://deb.nodesource.com/setup_9.x | bash -
+apt-get update
 apt-get install -y nodejs
 
 # Install dependencies for build node-ffi:
 npm install -g node-gyp
-apt-get install -y python2.7
+apt-get install -y python2.7 
 npm config set python /usr/bin/python2.7
 apt-get install -y build-essential
 
+# Build node-ffi from sources
+cd /root/Projects
+apt-get install -y git
+git clone git://github.com/node-ffi/node-ffi.git
+#
+cd node-ffi
+npm install
+node-gyp rebuild
+npm link
+
 cd /root/Projects/teonode
 npm install
-
+npm link ffi
 
 
 ## Startup script
