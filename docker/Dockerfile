@@ -2,6 +2,7 @@
 
 FROM gitlab.ksproject.org:5000/teonet/teonet
 MAINTAINER Tereshchenko Vladimir <vdtereshchenko@gmail.com>
+MAINTAINER Kirill Scherba <kirill@scherba.ru>
 
 # Add install script
 ADD docker/teonode_install.sh /root/

@@ -1,28 +1,27 @@
 #!/bin/sh
 # 
-# File:   teonode_install.sh
-# Author: Tereshchenko Vladimir
+# File:    teonode_install.sh
+# Author:  Tereshchenko Vladimir
+# Updated: Kirill Scherba
 #
 # Created on Mar 02, 2016 16:44:14 GMT+0300
 #
 
-
-# Install dependencies:
+# Install NodeJS
 apt-get update
-apt-get install -y curl
-curl -sL https://deb.nodesource.com/setup_6.x | bash -
-apt-get install -y nodejs
+apt-get install -y curl 
+curl -sL https://deb.nodesource.com/setup_9.x | bash -
+apt-get update
+apt-get install -y nodejs python2.7 git build-essential git
+apt upgrade -y
 
 # Install dependencies for build node-ffi:
 npm install -g node-gyp
-apt-get install -y python2.7
 npm config set python /usr/bin/python2.7
-apt-get install -y build-essential
 
+# Install application dependencies
 cd /root/Projects/teonode
 npm install
-
-
 
 ## Startup script
 #cat <<EOT > /root/teonet_watch_run
@@ -53,4 +52,4 @@ npm install
 ##
 
 
-echo "Done"
+echo "Done install"
