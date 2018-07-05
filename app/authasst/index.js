@@ -1,8 +1,8 @@
 'use strict';
 
-
-const teonet = require('../../teonet/teonet');
+const teonet = require('teonet');
 const logger = teonet.syslog('authasst', module.filename);
+const packageJson = require('../../package.json');
 const db = require('./db');
 
 /**
@@ -123,7 +123,7 @@ var _ke; // right pointer to ksnetEvMgrClass
 
 
 // Application welcome message
-console.log("Teonode application based on teonet ver. " + teonet.version());
+console.log("Teoauth application ver. " + packageJson.version + " based on teonet ver. " + teonet.version());
 
 
 /**
@@ -193,15 +193,18 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
                                 teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, JSON.stringify({error: err.message}));
                                 return;
                             }
-
-                            //console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', _rd.data, networks);
-
-                            //teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, user ? JSON.stringify(user) : null);
-                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, JSON.stringify({
+                            
+                            networks = user ? networks : null;
+                            let data = JSON.stringify({
                                 accessToken: _rd.data,
                                 user,
                                 networks
-                            }) + '\0');
+                            }) + '\0';
+                            //console.log('CMD_CHECK_USER_ANSWER.CMD_GET_NETWORKS_LIST', _rd.data, data);
+
+                            //teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_GET_NETWORKS_LIST_ANSWER, user ? JSON.stringify(user) : null);
+                            teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, data);
+                            //teonet.sendCmdAnswerTo(_ke, _rd, teoApi.CMD_CHECK_USER_ANSWER, null); // Test send null
                         });
                     });
                     break;
@@ -404,6 +407,7 @@ function teoEventCb(ke, ev, data, data_len, user_data) {
 }
 
 
-teonet.start('teo-node,teo-auth', '0.1.27', 3, 5, teoEventCb, function() { 
-    console.log('Finish'); 
+teonet.start('teo-node,teo-auth', packageJson.version, 3, 5, teoEventCb, function() {
+    console.log('Finish');
+    process.exit(0);
 });
